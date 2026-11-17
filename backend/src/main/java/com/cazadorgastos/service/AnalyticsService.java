@@ -35,8 +35,10 @@ public class AnalyticsService {
         return list.isEmpty() ? "COP" : list.get(0);
     }
 
-    public AnalyticsOverviewDto getOverview(UUID userId) {
-        String preferredCurrency = getUserPreferredCurrency(userId);
+    public AnalyticsOverviewDto getOverview(UUID userId, String overrideCurrency) {
+        String preferredCurrency = (overrideCurrency != null && !overrideCurrency.isBlank())
+                ? overrideCurrency.toUpperCase()
+                : getUserPreferredCurrency(userId);
         List<Subscription> subs = subscriptionService.getUserSubscriptions(userId, null, null);
 
         BigDecimal totalMonthly = BigDecimal.ZERO;

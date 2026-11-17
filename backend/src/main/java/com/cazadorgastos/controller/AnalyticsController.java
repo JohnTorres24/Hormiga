@@ -29,10 +29,11 @@ public class AnalyticsController {
 
     @GetMapping("/overview")
     public ResponseEntity<Map<String, Object>> getOverview(
-            @RequestHeader(value = "x-user-id", required = false) UUID headerUserId) {
+            @RequestHeader(value = "x-user-id", required = false) UUID headerUserId,
+            @RequestParam(required = false) String currency) {
 
         UUID userId = resolveUserId(headerUserId);
-        AnalyticsOverviewDto dto = analyticsService.getOverview(userId);
+        AnalyticsOverviewDto dto = analyticsService.getOverview(userId, currency);
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
