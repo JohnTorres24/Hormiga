@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Primarios Neobanco -->
     <color name="primary">#4F46E5</color>
-    <color name="primary_dark">#4338CA</color>
+    <color name="primary_dark">#3730A3</color>
+    <color name="primary_light">#EEF2FF</color>
     <color name="accent">#06B6D4</color>
+    <color name="accent_dark">#0891B2</color>
+
+    <!-- Alertas y Estados -->
     <color name="rose_danger">#E11D48</color>
     <color name="rose_light">#FFE4E6</color>
+    <color name="rose_dark">#9F1239</color>
     <color name="amber_warning">#D97706</color>
     <color name="amber_light">#FEF3C7</color>
+    <color name="amber_dark">#92400E</color>
     <color name="emerald_success">#059669</color>
     <color name="emerald_light">#D1FAE5</color>
+    <color name="emerald_dark">#065F46</color>
+
+    <!-- Fondos y Superficies -->
     <color name="background_light">#F8FAFC</color>
     <color name="surface_white">#FFFFFF</color>
+    <color name="card_subtle">#F1F5F9</color>
+    <color name="fintech_dark">#0F172A</color>
+    <color name="fintech_navy">#1E293B</color>
+
+    <!-- Textos -->
     <color name="text_primary">#0F172A</color>
     <color name="text_secondary">#64748B</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="text_on_dark">#FFFFFF</color>
+
+    <!-- Líneas y Bordes -->
     <color name="divider_color">#E2E8F0</color>
+    <color name="border_card">#CBD5E1</color>
 </resources>

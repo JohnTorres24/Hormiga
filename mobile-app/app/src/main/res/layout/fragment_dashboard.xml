@@ -3,87 +3,136 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:paddingStart="16dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false">
 
         <LinearLayout
+            android:id="@+id/dashboardContentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Resumen Financiero Anualizado"
-                android:textColor="@color/text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Card 1: Gasto Mensual -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Fila Título y Divisa -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Resumen Financiero"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvActiveCurrencyTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_tag_warning"
+                    android:paddingStart="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="4dp"
+                    android:text="Moneda: COP"
+                    android:textColor="@color/amber_dark"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Card 1: Hero Neobanco (Costo Mensual Total) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardHeroMonthly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_card_neobank"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="COSTO MENSUAL TOTAL"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="COMPROMISO MENSUAL TOTAL"
+                            android:textColor="#C7D2FE"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvLiveRateBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="● API Dólar en Vivo"
+                            android:textColor="#38BDF8"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvMonthlyTotal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="$0 COP"
-                        android:textColor="@color/primary"
-                        android:textSize="24sp"
+                        android:textColor="@color/surface_white"
+                        android:textSize="30sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="8dp" />
 
                     <TextView
                         android:id="@+id/tvActiveCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cargando suscripciones activas..."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
+                        android:text="Sincronizando suscripciones..."
+                        android:textColor="#E0E7FF"
+                        android:textSize="13sp"
+                        android:layout_marginTop="6dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 2: Impacto Anualizado -->
+            <!-- Card 2: Impacto Real Anualizado -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardYearlyImpact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="14dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="2dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                app:strokeColor="@color/border_card"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/surface_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -99,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:text="$0 COP"
                         android:textColor="@color/primary_dark"
-                        android:textSize="24sp"
+                        android:textSize="26sp"
                         android:textStyle="bold"
                         android:layout_marginTop="4dp" />
 
@@ -109,35 +158,57 @@
                         android:layout_height="wrap_content"
                         android:text="«Tus suscripciones anualizadas»"
                         android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
+                        android:textSize="13sp"
+                        android:layout_marginTop="6dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 3: Ahorro Potencial Cazador de Gastos Hormiga -->
+            <!-- Card 3: Cazador de Gastos Hormiga (Ahorro Anual Potencial) -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPotentialSavings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="14dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="2dp"
                 app:cardBackgroundColor="@color/rose_light"
                 app:strokeColor="@color/rose_danger"
-                app:strokeWidth="1dp">
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="🔥 AHORRO ANUAL POTENCIAL"
-                        android:textColor="@color/rose_danger"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🔥 CAZADOR DE GASTOS HORMIGA"
+                            android:textColor="@color/rose_danger"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_tag_danger"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="Alerta Financiera"
+                            android:textColor="@color/rose_danger"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvPotentialSavings"
@@ -145,36 +216,38 @@
                         android:layout_height="wrap_content"
                         android:text="$0 COP"
                         android:textColor="@color/rose_danger"
-                        android:textSize="24sp"
+                        android:textSize="26sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="6dp" />
 
                     <TextView
                         android:id="@+id/tvGhostCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0 gastos hormiga detectados con uso casi nulo"
-                        android:textColor="@color/rose_danger"
-                        android:textSize="12sp"
-                        android:layout_marginTop="4dp" />
+                        android:textColor="@color/rose_dark"
+                        android:textSize="13sp"
+                        android:layout_marginTop="6dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Card 4: Cobro Más Alto -->
+            <!-- Card 4: Suscripción de Mayor Valor -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardHighestExpense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="2dp"
-                app:strokeColor="@color/divider_color"
-                app:strokeWidth="1dp">
+                app:strokeColor="@color/border_card"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/surface_white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -188,19 +261,19 @@
                         android:id="@+id/tvHighestName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
+                        android:text="Cargando..."
                         android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="6dp" />
 
                     <TextView
                         android:id="@+id/tvHighestAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="-"
+                        android:text="$0 / mes"
                         android:textColor="@color/amber_warning"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:layout_marginTop="2dp" />
                 </LinearLayout>

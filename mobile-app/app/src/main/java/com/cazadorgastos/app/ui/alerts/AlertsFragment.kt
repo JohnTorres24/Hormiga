@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cazadorgastos.app.R
 import com.cazadorgastos.app.adapter.AlertAdapter
 import com.cazadorgastos.app.data.api.RetrofitClient
 import com.cazadorgastos.app.databinding.FragmentAlertsBinding
@@ -33,10 +34,10 @@ class AlertsFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 try {
                     RetrofitClient.apiService.dismissAlert(alert.id)
-                    Toast.makeText(context, "Alerta descartada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Alerta descartada con éxito", Toast.LENGTH_SHORT).show()
                     loadAlerts()
                 } catch (e: Exception) {
-                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error al descartar: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -44,7 +45,8 @@ class AlertsFragment : Fragment() {
         binding.recyclerViewAlerts.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewAlerts.adapter = adapter
 
-        binding.swipeRefresh.setOnRefreshListener {
+        binding.swipeRefreshAlerts.setColorSchemeResources(R.color.amber_warning, R.color.rose_danger)
+        binding.swipeRefreshAlerts.setOnRefreshListener {
             loadAlerts()
         }
 
@@ -52,17 +54,28 @@ class AlertsFragment : Fragment() {
     }
 
     private fun loadAlerts() {
-        binding.swipeRefresh.isRefreshing = true
+        binding.swipeRefreshAlerts.isRefreshing = true
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getAlerts()
                 if (response.success && response.data != null) {
-                    adapter.submitList(response.data)
+                    val list = response.data
+                    adapter.submitList(list)
+
+                    if (list.isEmpty()) {
+                        binding.layoutEmptyAlerts.visibility = View.VISIBLE
+                        binding.recyclerViewAlerts.visibility = View.GONE
+                    } else {
+                        binding.layoutEmptyAlerts.visibility = View.GONE
+                        binding.recyclerViewAlerts.visibility = View.VISIBLE
+                    }
+                } else {
+                    Toast.makeText(context, response.error ?: "Error al consultar alertas", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error de red: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
-                binding.swipeRefresh.isRefreshing = false
+                binding.swipeRefreshAlerts.isRefreshing = false
             }
         }
     }

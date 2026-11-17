@@ -6,7 +6,40 @@ data class ApiResponse<T>(
     @SerializedName("success") val success: Boolean,
     @SerializedName("data") val data: T?,
     @SerializedName("count") val count: Int? = null,
-    @SerializedName("error") val error: String? = null
+    @SerializedName("error") val error: String? = null,
+    @SerializedName("message") val message: String? = null
+)
+
+data class RegisterRequest(
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("password") val password: String,
+    @SerializedName("preferredCurrency") val preferredCurrency: String = "COP"
+)
+
+data class LoginRequest(
+    @SerializedName("email") val email: String,
+    @SerializedName("password") val password: String
+)
+
+data class UserData(
+    @SerializedName("id") val id: String,
+    @SerializedName("fullName") val fullName: String,
+    @SerializedName("email") val email: String,
+    @SerializedName("preferredCurrency") val preferredCurrency: String
+)
+
+data class CreateSubscriptionRequest(
+    @SerializedName("name") val name: String,
+    @SerializedName("provider") val provider: String,
+    @SerializedName("price") val price: Double,
+    @SerializedName("currency") val currency: String,
+    @SerializedName("billingCycle") val billingCycle: String,
+    @SerializedName("nextBillingDate") val nextBillingDate: String,
+    @SerializedName("isFreeTrial") val isFreeTrial: Boolean,
+    @SerializedName("trialEndDate") val trialEndDate: String?,
+    @SerializedName("usageFrequency") val usageFrequency: String,
+    @SerializedName("perceivedValue") val perceivedValue: Int
 )
 
 data class Subscription(

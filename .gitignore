@@ -17,6 +17,7 @@ dist-ssr/
 # Android & Gradle
 .gradle/
 build/
+**/build/
 app/build/
 local.properties
 *.apk
@@ -25,11 +26,10 @@ local.properties
 captures/
 
 # IDEs
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/usage.statistics.xml
-.idea/shelf/
+.idea/
+**/.idea/
 *.iws
+*.iml
 out/
 .vscode/
 

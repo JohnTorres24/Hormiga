@@ -4,7 +4,10 @@ import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.cazadorgastos.app.R
 import com.cazadorgastos.app.data.model.CancellationGuide
 import com.cazadorgastos.app.databinding.ItemGuideBinding
 
@@ -27,6 +30,9 @@ class GuideAdapter : RecyclerView.Adapter<GuideAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
+        holder.itemView.startAnimation(
+            AnimationUtils.loadAnimation(holder.itemView.context, R.anim.fade_in_up)
+        )
     }
 
     override fun getItemCount(): Int = items.size
@@ -35,19 +41,25 @@ class GuideAdapter : RecyclerView.Adapter<GuideAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(guide: CancellationGuide) {
+            val context = binding.root.context
             binding.tvGuideServiceName.text = guide.serviceName
-            binding.tvGuideTime.text = "~${guide.estimatedTimeMinutes} min"
+            binding.tvGuideTime.text = "⏱️ ~${guide.estimatedTimeMinutes} min"
 
             if (!guide.cancellationTrapsWarning.isNullOrEmpty()) {
-                binding.tvGuideWarning.visibility = android.view.View.VISIBLE
-                binding.tvGuideWarning.text = "⚠️ " + guide.cancellationTrapsWarning
+                binding.layoutGuideWarningBox.visibility = android.view.View.VISIBLE
+                binding.tvGuideWarning.text = guide.cancellationTrapsWarning
             } else {
-                binding.tvGuideWarning.visibility = android.view.View.GONE
+                binding.layoutGuideWarningBox.visibility = android.view.View.GONE
             }
 
             binding.btnOpenDirectCancellation.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(guide.directCancellationUrl))
-                it.context.startActivity(intent)
+                try {
+                    val url = guide.directCancellationUrl
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                    context.startActivity(intent)
+                } catch (e: Exception) {
+                    Toast.makeText(context, "No se pudo abrir el enlace: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

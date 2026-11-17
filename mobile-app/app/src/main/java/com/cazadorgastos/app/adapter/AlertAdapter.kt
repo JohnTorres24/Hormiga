@@ -2,7 +2,9 @@ package com.cazadorgastos.app.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import com.cazadorgastos.app.R
 import com.cazadorgastos.app.data.model.NotificationLog
 import com.cazadorgastos.app.databinding.ItemAlertBinding
 
@@ -27,6 +29,9 @@ class AlertAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
+        holder.itemView.startAnimation(
+            AnimationUtils.loadAnimation(holder.itemView.context, R.anim.fade_in_up)
+        )
     }
 
     override fun getItemCount(): Int = items.size

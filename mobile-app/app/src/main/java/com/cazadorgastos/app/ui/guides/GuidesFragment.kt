@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cazadorgastos.app.R
 import com.cazadorgastos.app.adapter.GuideAdapter
 import com.cazadorgastos.app.data.api.RetrofitClient
 import com.cazadorgastos.app.databinding.FragmentGuidesBinding
@@ -33,18 +34,28 @@ class GuidesFragment : Fragment() {
         binding.recyclerViewGuides.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewGuides.adapter = adapter
 
+        binding.swipeRefreshGuides.setColorSchemeResources(R.color.primary, R.color.rose_danger)
+        binding.swipeRefreshGuides.setOnRefreshListener {
+            loadGuides()
+        }
+
         loadGuides()
     }
 
     private fun loadGuides() {
+        binding.swipeRefreshGuides.isRefreshing = true
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getGuides()
                 if (response.success && response.data != null) {
                     adapter.submitList(response.data)
+                } else {
+                    Toast.makeText(context, response.error ?: "Error al obtener guías", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error de red: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                binding.swipeRefreshGuides.isRefreshing = false
             }
         }
     }
