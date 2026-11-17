@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <!-- Antenas de la Hormiga -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M27,15 C24,10 18,9 14,11 M37,15 C40,10 46,9 50,11" />
+
+    <!-- Círculos de punta de antenas -->
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M14,11 A2,2 0 1,1 14,11.01 Z M50,11 A2,2 0 1,1 50,11.01 Z" />
+
+    <!-- Cabeza -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,13 C26.5,13 22,17.5 22,23 C22,28.5 26.5,33 32,33 C37.5,33 42,28.5 42,23 C42,17.5 37.5,13 32,13 Z" />
+
+    <!-- Ojos brillantes de la hormiga -->
+    <path
+        android:fillColor="#4F46E5"
+        android:pathData="M27,21 A1.8,1.8 0 1,1 27,21.01 Z M37,21 A1.8,1.8 0 1,1 37,21.01 Z" />
+
+    <!-- Tórax / Sección media -->
+    <path
+        android:fillColor="#E0E7FF"
+        android:pathData="M32,33 C28,33 25,36.5 25,41 C25,45.5 28,49 32,49 C36,49 39,45.5 39,41 C39,36.5 36,33 32,33 Z" />
+
+    <!-- Abdomen posterior grande -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M32,48 C25,48 20,53 20,58 C20,62.5 25.5,64 32,64 C38.5,64 44,62.5 44,58 C44,53 39,48 32,48 Z" />
+
+    <!-- Patas delanteras (Par 1) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M25,35 L16,29 L10,34 M39,35 L48,29 L54,34" />
+
+    <!-- Patas intermedias (Par 2) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M25,41 L14,41 L8,48 M39,41 L50,41 L56,48" />
+
+    <!-- Patas traseras (Par 3) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M26,46 L17,52 L12,61 M38,46 L47,52 L52,61" />
+
+</vector>

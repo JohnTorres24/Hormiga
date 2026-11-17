@@ -107,10 +107,10 @@ class AuthActivity : AppCompatActivity() {
                     Toast.makeText(this@AuthActivity, "¡Bienvenido, ${user.fullName}!", Toast.LENGTH_SHORT).show()
                     goToMainActivity()
                 } else {
-                    Toast.makeText(this@AuthActivity, res.error ?: "Error al iniciar sesión", Toast.LENGTH_LONG).show()
+                    showFriendlyError(res.error)
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@AuthActivity, "Error de conexión: ${e.message}", Toast.LENGTH_LONG).show()
+                showFriendlyError(e.message)
             } finally {
                 setLoading(false)
             }
@@ -139,14 +139,35 @@ class AuthActivity : AppCompatActivity() {
                     Toast.makeText(this@AuthActivity, "Cuenta creada exitosamente para $email", Toast.LENGTH_SHORT).show()
                     goToMainActivity()
                 } else {
-                    Toast.makeText(this@AuthActivity, res.error ?: "Error al registrar la cuenta", Toast.LENGTH_LONG).show()
+                    showFriendlyError(res.error)
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@AuthActivity, "Error de conexión: ${e.message}", Toast.LENGTH_LONG).show()
+                showFriendlyError(e.message)
             } finally {
                 setLoading(false)
             }
         }
+    }
+
+    private fun showFriendlyError(rawError: String?) {
+        val msg = rawError ?: ""
+        val friendlyMessage = when {
+            msg.contains("500") || msg.contains("Internal Server Error") || msg.contains("servidor interno") || msg.contains("PreparedStatement") ->
+                "Error del servidor interno. Por favor intenta nuevamente en unos momentos."
+            msg.contains("401") || msg.contains("Credenciales") ->
+                "Credenciales inválidas. Verifica tu correo y contraseña."
+            msg.contains("Ya existe una cuenta") ->
+                msg
+            msg.contains("timeout", ignoreCase = true) ->
+                "El servidor en la nube está iniciando. Por favor intenta de nuevo en unos segundos."
+            msg.contains("Failed to connect", ignoreCase = true) || msg.contains("Unable to resolve host", ignoreCase = true) ->
+                "No hay conexión con el servidor. Revisa tu acceso a internet."
+            msg.isNotEmpty() && !msg.startsWith("HTTP") ->
+                msg
+            else ->
+                "Error del servidor interno. Por favor intenta nuevamente en unos momentos."
+        }
+        Toast.makeText(this@AuthActivity, friendlyMessage, Toast.LENGTH_LONG).show()
     }
 
     private fun setLoading(loading: Boolean) {

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/bg_ant_badge" />
+    <foreground>
+        <inset
+            android:drawable="@drawable/ic_ant_logo"
+            android:inset="20%" />
+    </foreground>
+</adaptive-icon>
