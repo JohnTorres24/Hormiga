@@ -2,6 +2,8 @@ package com.cazadorgastos.service;
 
 import com.cazadorgastos.dto.LoginRequest;
 import com.cazadorgastos.dto.RegisterRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.UUID;
 @Service
 public class AuthService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final JdbcTemplate jdbcTemplate;
 
     public AuthService(JdbcTemplate jdbcTemplate) {
@@ -39,48 +42,54 @@ public class AuthService {
 
         UUID userId = UUID.randomUUID();
 
-        // 1. Insertar en auth.users con encriptación bcrypt de pgcrypto
-        jdbcTemplate.update("""
-            INSERT INTO auth.users (
-                id, instance_id, aud, role, email, encrypted_password, 
-                email_confirmed_at, raw_app_meta_data, raw_user_meta_data, 
-                created_at, updated_at
-            ) VALUES (
-                ?,
-                '00000000-0000-0000-0000-000000000000',
-                'authenticated',
-                'authenticated',
-                ?,
-                crypt(?, gen_salt('bf')),
-                NOW(),
-                '{"provider":"email","providers":["email"]}',
-                ?,
-                NOW(),
-                NOW()
-            )
-        """,
-                userId,
-                email,
-                req.password(),
-                String.format("{\"full_name\":\"%s\",\"preferred_currency\":\"%s\"}", fullName, currency)
-        );
+        try {
+            // 1. Insertar en auth.users usando schema extensions para crypt y gen_salt, y casting jsonb
+            String insertAuthSql = """
+                INSERT INTO auth.users (
+                    id, instance_id, aud, role, email, encrypted_password, 
+                    email_confirmed_at, raw_app_meta_data, raw_user_meta_data, 
+                    created_at, updated_at
+                ) VALUES (
+                    ?,
+                    '00000000-0000-0000-0000-000000000000',
+                    'authenticated',
+                    'authenticated',
+                    ?,
+                    extensions.crypt(?, extensions.gen_salt('bf')),
+                    NOW(),
+                    '{"provider":"email","providers":["email"]}'::jsonb,
+                    ?::jsonb,
+                    NOW(),
+                    NOW()
+                )
+            """;
 
-        // 2. Asegurar registro en public.profiles
-        jdbcTemplate.update("""
-            INSERT INTO public.profiles (id, full_name, email, preferred_currency)
-            VALUES (?, ?, ?, ?)
-            ON CONFLICT (id) DO UPDATE SET
-                full_name = EXCLUDED.full_name,
-                preferred_currency = EXCLUDED.preferred_currency,
-                updated_at = NOW()
-        """, userId, fullName, email, currency);
+            String userMetaJson = String.format("{\"full_name\":\"%s\",\"preferred_currency\":\"%s\"}", fullName, currency);
 
-        return Map.of(
-                "id", userId.toString(),
-                "fullName", fullName,
-                "email", email,
-                "preferredCurrency", currency
-        );
+            jdbcTemplate.update(insertAuthSql, userId, email, req.password(), userMetaJson);
+
+            // 2. Asegurar registro en public.profiles
+            jdbcTemplate.update("""
+                INSERT INTO public.profiles (id, full_name, email, preferred_currency)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT (id) DO UPDATE SET
+                    full_name = EXCLUDED.full_name,
+                    preferred_currency = EXCLUDED.preferred_currency,
+                    updated_at = NOW()
+            """, userId, fullName, email, currency);
+
+            log.info("Usuario registrado exitosamente: id={}, email={}", userId, email);
+
+            return Map.of(
+                    "id", userId.toString(),
+                    "fullName", fullName,
+                    "email", email,
+                    "preferredCurrency", currency
+            );
+        } catch (Exception e) {
+            log.error("Error al registrar usuario en Supabase: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al registrar cuenta en la base de datos: " + e.getMessage(), e);
+        }
     }
 
     public Map<String, Object> login(LoginRequest req) {
@@ -90,13 +99,13 @@ public class AuthService {
 
         String email = req.email().trim().toLowerCase();
 
-        // Verificar credenciales en auth.users
+        // Verificar credenciales en auth.users con extensions.crypt
         String sql = """
             SELECT u.id, p.full_name, u.email, p.preferred_currency
             FROM auth.users u
             LEFT JOIN public.profiles p ON u.id = p.id
             WHERE LOWER(u.email) = ? 
-              AND u.encrypted_password = crypt(?, u.encrypted_password)
+              AND u.encrypted_password = extensions.crypt(?, u.encrypted_password)
             LIMIT 1
         """;
 
@@ -111,6 +120,7 @@ public class AuthService {
             throw new IllegalArgumentException("Credenciales inválidas. Verifica tu correo y contraseña.");
         }
 
+        log.info("Inicio de sesión exitoso para usuario: {}", email);
         return rows.get(0);
     }
 }
