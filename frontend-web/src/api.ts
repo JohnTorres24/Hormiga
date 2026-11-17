@@ -9,7 +9,7 @@ import {
   Subscription
 } from './types';
 
-const API_BASE = '/api';
+const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || 'https://cazador-gastos-hormiga-api.onrender.com/api';
 
 export async function fetchOverview(): Promise<AnalyticsOverview> {
   const res = await fetch(`${API_BASE}/analytics/overview`);
