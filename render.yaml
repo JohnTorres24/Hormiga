@@ -1,0 +1,36 @@
+# ==============================================================================
+# MANIFIESTO DE DESPLIEGUE PARA RENDER (render.yaml)
+# Sistema: Cazador de Gastos Hormiga - API Backend (Spring Boot / Maven / Java 21)
+# ==============================================================================
+services:
+  - type: web
+    name: cazador-gastos-hormiga-api
+    runtime: java
+    plan: free
+    region: oregon
+    rootDir: backend
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/cazador-gastos-hormiga-1.0.0.jar
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_HOST
+        value: aws-1-us-east-1.pooler.supabase.com
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        value: postgres
+      - key: DB_USER
+        value: postgres.nxlockddzloehrsrcyby
+      - key: DB_PASSWORD
+        sync: false
+      - key: EXCHANGE_API_URL
+        value: https://open.er-api.com/v6/latest/USD
+      - key: BASE_CURRENCY
+        value: USD
+      - key: TARGET_DEFAULT_CURRENCY
+        value: COP
+      - key: PRE_BILLING_ALERT_HOURS
+        value: 48

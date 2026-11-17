@@ -1,0 +1,42 @@
+# Java & Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+.mvn/wrapper/maven-wrapper.jar
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env.local
+
+# Android & Gradle
+.gradle/
+build/
+app/build/
+local.properties
+*.apk
+*.aab
+.cxx/
+captures/
+
+# IDEs
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+*.iws
+out/
+.vscode/
+
+# Logs & OS
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+Thumbs.db
+.DS_Store

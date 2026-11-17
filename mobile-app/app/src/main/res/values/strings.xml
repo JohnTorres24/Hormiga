@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Cazador de Gastos Hormiga</string>
+    <string name="title_dashboard">Panel General</string>
+    <string name="title_subscriptions">Suscripciones</string>
+    <string name="title_alerts">Alertas 48h</string>
+    <string name="title_guides">Cancelación Rápida</string>
+</resources>
