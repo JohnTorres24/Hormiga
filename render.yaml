@@ -34,3 +34,16 @@ services:
         value: COP
       - key: PRE_BILLING_ALERT_HOURS
         value: 48
+
+  # ==============================================================================
+  # SERVICIO WEB ESTÁTICO (React 18 + Vite + Tailwind CSS)
+  # ==============================================================================
+  - type: static
+    name: cazador-gastos-hormiga-web
+    rootDir: frontend-web
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

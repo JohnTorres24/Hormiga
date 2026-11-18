@@ -292,7 +292,7 @@ export const App: React.FC = () => {
                     {alerts.map(a => (
                       <div
                         key={a.id}
-                        className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-750/30 flex items-center justify-between gap-4"
+                        className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-800/60 flex items-center justify-between gap-4"
                       >
                         <div>
                           <div className="flex items-center gap-2">

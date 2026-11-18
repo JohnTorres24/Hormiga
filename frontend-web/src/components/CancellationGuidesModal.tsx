@@ -36,10 +36,10 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-700 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/75 backdrop-blur-xs">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 dark:border-slate-800 animate-in fade-in zoom-in-95 duration-150">
         {/* Cabecera del Modal */}
-        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50 dark:bg-slate-900/60">
+        <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950/80">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
               <ShieldAlert className="w-6 h-6" />
@@ -52,7 +52,7 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
 
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -61,7 +61,7 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
         {/* Contenido en 2 Columnas */}
         <div className="grid grid-cols-1 md:grid-cols-3 flex-1 overflow-hidden">
           {/* Panel Lateral: Lista de Servicios */}
-          <div className="border-r border-slate-200 dark:border-slate-700 p-4 overflow-y-auto bg-slate-50/50 dark:bg-slate-850/50">
+          <div className="border-r border-slate-200 dark:border-slate-800 p-4 overflow-y-auto bg-slate-50/70 dark:bg-slate-950/60">
             <div className="relative mb-3">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
               <input
@@ -69,7 +69,7 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
                 placeholder="Buscar plataforma..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
               />
             </div>
 
@@ -81,7 +81,7 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
                   className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-between ${
                     activeGuide?.id === g.id
                       ? 'bg-indigo-600 text-white shadow-xs'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-700'
+                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800'
                   }`}
                 >
                   <span className="truncate">{g.serviceName}</span>
@@ -90,8 +90,8 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
                       activeGuide?.id === g.id
                         ? 'bg-indigo-700 text-white'
                         : g.difficultyLevel === 'hard'
-                        ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
-                        : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
+                        ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-300'
+                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200'
                     }`}
                   >
                     {g.difficultyLevel === 'easy' ? 'Fácil' : g.difficultyLevel === 'medium' ? 'Media' : 'Difícil'}
@@ -102,10 +102,10 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
           </div>
 
           {/* Panel Principal: Detalle de la Guía */}
-          <div className="md:col-span-2 p-6 overflow-y-auto space-y-6">
+          <div className="md:col-span-2 p-6 overflow-y-auto space-y-6 bg-white dark:bg-slate-900">
             {activeGuide ? (
               <>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-700">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
                   <div>
                     <h4 className="text-xl font-black text-slate-900 dark:text-white">{activeGuide.serviceName}</h4>
                     <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">
@@ -129,12 +129,12 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
 
                 {/* Advertencia sobre trampas de retención (Dark Patterns) */}
                 {activeGuide.cancellationTrapsWarning && (
-                  <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200">
+                  <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200">
                     <div className="font-extrabold flex items-center gap-1.5 text-amber-800 dark:text-amber-300 mb-1">
                       <ShieldAlert className="w-4 h-4 text-amber-600" />
                       Advertencia de Patrón Oscuro / Retención:
                     </div>
-                    <p className="text-amber-800/90 dark:text-amber-200/90 leading-relaxed">
+                    <p className="text-amber-800/90 dark:text-amber-100 leading-relaxed font-medium">
                       {activeGuide.cancellationTrapsWarning}
                     </p>
                   </div>
@@ -142,16 +142,16 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
 
                 {/* Paso a Paso */}
                 <div>
-                  <h5 className="text-xs font-extrabold uppercase text-slate-400 dark:text-slate-500 tracking-wider mb-3">
+                  <h5 className="text-xs font-extrabold uppercase text-slate-500 dark:text-slate-400 tracking-wider mb-3">
                     Instrucciones Paso a Paso
                   </h5>
                   <div className="space-y-3">
                     {steps.map((st, i) => (
-                      <div key={i} className="flex items-start space-x-3 bg-slate-50 dark:bg-slate-750/40 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-700/60">
-                        <div className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5">
+                      <div key={i} className="flex items-start space-x-3 bg-slate-100/80 dark:bg-slate-800/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-xs">
+                        <div className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                           {st.step}
                         </div>
-                        <p className="text-xs text-slate-700 dark:text-slate-300 font-medium leading-relaxed pt-0.5">
+                        <p className="text-xs text-slate-800 dark:text-slate-100 font-semibold leading-relaxed pt-0.5">
                           {st.instruction}
                         </p>
                       </div>
