@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -64,6 +65,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Sincronizar automáticamente cualquier cambio realizado externamente (página web o base de datos)
+        refreshCurrentFragment()
+    }
+
     private fun setupHeaderUI() {
         val fullName = sessionManager.getFullName()
         val email = sessionManager.getEmail()
@@ -82,6 +89,13 @@ class MainActivity : AppCompatActivity() {
         binding.tvUserEmail.text = email.ifEmpty { "Cazador de Gastos Hormiga" }
 
         updateCurrencyButtonText(currency)
+        updateThemeButtonIcon(sessionManager.isDarkMode())
+    }
+
+    private fun updateThemeButtonIcon(isDarkMode: Boolean) {
+        binding.btnToggleTheme.setIconResource(
+            if (isDarkMode) R.drawable.ic_sun else R.drawable.ic_moon
+        )
     }
 
     private fun updateCurrencyButtonText(currency: String) {
@@ -89,6 +103,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Alternar Modo Oscuro <-> Modo Claro
+        binding.btnToggleTheme.setOnClickListener {
+            val anim = AnimationUtils.loadAnimation(this, R.anim.card_pop)
+            binding.btnToggleTheme.startAnimation(anim)
+
+            val newDarkMode = !sessionManager.isDarkMode()
+            sessionManager.setDarkMode(newDarkMode)
+            updateThemeButtonIcon(newDarkMode)
+
+            AppCompatDelegate.setDefaultNightMode(
+                if (newDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            )
+        }
+
         // Alternar moneda COP <-> USD
         binding.btnToggleCurrency.setOnClickListener {
             val anim = AnimationUtils.loadAnimation(this, R.anim.card_pop)

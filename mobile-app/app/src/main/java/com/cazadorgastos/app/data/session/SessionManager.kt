@@ -14,6 +14,7 @@ class SessionManager(context: Context) {
         private const val KEY_FULL_NAME = "full_name"
         private const val KEY_EMAIL = "email"
         private const val KEY_CURRENCY = "preferred_currency"
+        private const val KEY_DARK_MODE = "is_dark_mode"
     }
 
     fun saveUser(userId: String, fullName: String, email: String, currency: String = "COP") {
@@ -41,6 +42,12 @@ class SessionManager(context: Context) {
         val next = if (getCurrency() == "COP") "USD" else "COP"
         prefs.edit().putString(KEY_CURRENCY, next).apply()
         return next
+    }
+
+    fun isDarkMode(): Boolean = prefs.getBoolean(KEY_DARK_MODE, false)
+
+    fun setDarkMode(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_DARK_MODE, enabled).apply()
     }
 
     fun logout() {

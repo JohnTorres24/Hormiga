@@ -242,15 +242,19 @@
                 android:value="3.0" />
         </LinearLayout>
 
-        <!-- Botón Guardar -->
+        <!-- Botón Guardar con Texto e Icono Blanco Nítido -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveSubscription"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:text="Guardar Suscripción"
+            android:textColor="@color/text_on_dark"
             android:textSize="14sp"
             android:textStyle="bold"
             android:backgroundTint="@color/primary"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/text_on_dark"
+            app:iconGravity="textStart"
             app:cornerRadius="14dp" />
 
     </LinearLayout>

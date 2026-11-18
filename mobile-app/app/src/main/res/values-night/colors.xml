@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primarios Neobanco en Modo Oscuro -->
+    <color name="primary">#818CF8</color>
+    <color name="primary_dark">#6366F1</color>
+    <color name="primary_light">#1E1B4B</color>
+    <color name="accent">#38BDF8</color>
+    <color name="accent_dark">#0284C7</color>
+
+    <!-- Alertas y Estados en Modo Oscuro -->
+    <color name="rose_danger">#FB7185</color>
+    <color name="rose_light">#4C0519</color>
+    <color name="rose_dark">#F43F5E</color>
+    <color name="amber_warning">#FBBF24</color>
+    <color name="amber_light">#451A03</color>
+    <color name="amber_dark">#F59E0B</color>
+    <color name="emerald_success">#34D399</color>
+    <color name="emerald_light">#064E3B</color>
+    <color name="emerald_dark">#10B981</color>
+
+    <!-- Fondos y Superficies en Modo Oscuro -->
+    <color name="background_light">#0F172A</color>
+    <color name="surface_white">#1E293B</color>
+    <color name="card_subtle">#334155</color>
+    <color name="fintech_dark">#020617</color>
+    <color name="fintech_navy">#0F172A</color>
+
+    <!-- Textos en Modo Oscuro -->
+    <color name="text_primary">#F8FAFC</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="text_muted">#64748B</color>
+    <color name="text_on_dark">#FFFFFF</color>
+
+    <!-- Líneas y Bordes en Modo Oscuro -->
+    <color name="divider_color">#334155</color>
+    <color name="border_card">#475569</color>
+</resources>
