@@ -8,6 +8,7 @@ interface ProfileModalProps {
   user: UserSession;
   subscriptions: Subscription[];
   currency: string;
+  dollarRate?: number;
   onLogout: () => void;
 }
 
@@ -17,9 +18,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
   user,
   subscriptions,
   currency,
+  dollarRate = 3320.19,
   onLogout
 }) => {
   if (!isOpen) return null;
+
+  const rate = dollarRate > 0 ? dollarRate : 3320.19;
 
   const initials = user.fullName
     .split(' ')
@@ -29,18 +33,31 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
     .join('') || 'U';
 
   const formatMoney = (amount: number) => {
-    return `$${Math.round(amount).toLocaleString('es-CO')} ${currency}`;
+    if (currency === 'USD') {
+      return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+    }
+    return `$${Math.round(amount).toLocaleString('es-CO')} COP`;
+  };
+
+  const getCostInActiveCurrency = (sub: Subscription) => {
+    const rawCost = sub.normalizedMonthlyCost || sub.price;
+    const subCurr = (sub.currency || 'COP').toUpperCase();
+    if (currency === 'USD') {
+      return subCurr === 'USD' ? rawCost : rawCost / rate;
+    } else {
+      return subCurr === 'COP' ? rawCost : rawCost * rate;
+    }
   };
 
   const activeSubs = subscriptions.filter(s => s.status === 'active');
   const cancelledSubs = subscriptions.filter(s => s.status === 'cancelled');
 
   const activeMonthlyTotal = activeSubs.reduce(
-    (acc, s) => acc + (s.normalizedMonthlyCost || s.price),
+    (acc, s) => acc + getCostInActiveCurrency(s),
     0
   );
   const cancelledMonthlySavings = cancelledSubs.reduce(
-    (acc, s) => acc + (s.normalizedMonthlyCost || s.price),
+    (acc, s) => acc + getCostInActiveCurrency(s),
     0
   );
   const cancelledYearlySavings = cancelledMonthlySavings * 12;
@@ -60,10 +77,10 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   {user.fullName}
                 </h3>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <p className="text-xs text-slate-500 dark:text-slate-300 font-medium">
                 {user.email}
               </p>
-              <div className="mt-1 inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+              <div className="mt-1 inline-flex items-center gap-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
                 <Award className="w-3 h-3" />
                 <span>🎖️ Cazador de Gastos Hormiga</span>
               </div>
@@ -103,26 +120,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="mt-4 grid grid-cols-2 gap-3">
           {/* Activas */}
           <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-700">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300">
               Activas
             </span>
             <div className="text-2xl font-black text-slate-900 dark:text-white mt-1">
               {activeSubs.length}
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 font-medium">
               Gasto: {formatMoney(activeMonthlyTotal)}
             </p>
           </div>
 
           {/* Canceladas */}
           <div className="p-4 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-800/50">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
               Canceladas
             </span>
             <div className="text-2xl font-black text-emerald-700 dark:text-emerald-300 mt-1">
               {cancelledSubs.length}
             </div>
-            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-0.5 font-medium">
+            <p className="text-[11px] text-emerald-700 dark:text-emerald-300 mt-0.5 font-medium">
               Gastos hormiga eliminados
             </p>
           </div>
@@ -130,21 +147,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
         {/* Historial de Cancelaciones y Ahorro */}
         <div className="mt-5">
-          <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-2">
             Historial de Gastos Hormiga Neutralizados
           </h4>
 
           {cancelledSubs.length === 0 ? (
             <div className="p-4 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-center text-xs text-slate-400">
               <p className="font-semibold text-slate-600 dark:text-slate-300">Aún no has cancelado ninguna suscripción.</p>
-              <p className="mt-1">
+              <p className="mt-1 text-slate-500 dark:text-slate-400">
                 Cuando des de baja un servicio o gasto hormiga, su ahorro mensual y anual se sumará de forma permanente aquí.
               </p>
             </div>
           ) : (
             <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
               {cancelledSubs.map(sub => {
-                const cost = sub.normalizedMonthlyCost || sub.price;
+                const cost = getCostInActiveCurrency(sub);
                 return (
                   <div
                     key={sub.id}
@@ -156,16 +173,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         <div className="text-xs font-bold text-slate-900 dark:text-white">
                           {sub.name}
                         </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                        <div className="text-[11px] text-slate-500 dark:text-slate-300">
                           {sub.provider}
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-400">
+                      <span className="text-xs font-extrabold text-emerald-600 dark:text-emerald-300">
                         +{formatMoney(cost)}/mes
                       </span>
-                      <span className="block text-[10px] text-slate-400">
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">
                         {formatMoney(cost * 12)}/año
                       </span>
                     </div>

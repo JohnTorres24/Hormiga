@@ -243,21 +243,21 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-600 dark:text-slate-400 text-[11px] mb-1">¿Con qué frecuencia lo usas?</label>
+                <label className="block text-slate-700 dark:text-slate-200 text-[11px] mb-1 font-bold">¿Con qué frecuencia lo usas?</label>
                 <select
                   value={usageFrequency}
                   onChange={e => setUsageFrequency(e.target.value)}
                   className="w-full px-2.5 py-1.5 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
-                  <option value="daily">Todos los días</option>
-                  <option value="weekly">Semanalmente</option>
-                  <option value="monthly">Una vez al mes</option>
-                  <option value="rarely">Rara vez</option>
-                  <option value="never">Casi nunca / Olvidada</option>
+                  <option value="daily" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Todos los días</option>
+                  <option value="weekly" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Semanalmente</option>
+                  <option value="monthly" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Una vez al mes</option>
+                  <option value="rarely" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Rara vez</option>
+                  <option value="never" className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Casi nunca / Olvidada</option>
                 </select>
               </div>
               <div>
-                <label className="block text-slate-600 dark:text-slate-400 text-[11px] mb-1">
+                <label className="block text-slate-700 dark:text-slate-200 text-[11px] mb-1 font-bold">
                   Valor Percibido (1 = Inútil, 5 = Esencial): {perceivedValue}★
                 </label>
                 <input

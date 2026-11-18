@@ -101,8 +101,8 @@ export async function registerUser(
   return session;
 }
 
-export async function fetchOverview(): Promise<AnalyticsOverview> {
-  const res = await fetch(`${API_BASE}/analytics/overview`, {
+export async function fetchOverview(currency: string = 'COP'): Promise<AnalyticsOverview> {
+  const res = await fetch(`${API_BASE}/analytics/overview?currency=${currency}`, {
     headers: getAuthHeaders()
   });
   const json = await res.json();

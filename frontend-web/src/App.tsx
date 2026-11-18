@@ -83,14 +83,15 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    loadAllData();
+    loadAllData(activeCurrency);
   }, [user]);
 
-  const loadAllData = async () => {
+  const loadAllData = async (curr?: string) => {
+    const targetCurrency = curr || activeCurrency;
     setLoading(true);
     try {
       const [ovData, subsData, alertsData, catsData, guidesData, ratesData] = await Promise.all([
-        fetchOverview(),
+        fetchOverview(targetCurrency),
         fetchSubscriptions(),
         fetchAlerts(),
         fetchCategories(),
@@ -116,7 +117,9 @@ export const App: React.FC = () => {
   };
 
   const handleCurrencyToggle = () => {
-    setActiveCurrency(prev => (prev === 'COP' ? 'USD' : 'COP'));
+    const nextCurrency = activeCurrency === 'COP' ? 'USD' : 'COP';
+    setActiveCurrency(nextCurrency);
+    loadAllData(nextCurrency);
   };
 
   const handleOpenGuidesModal = (serviceName?: string) => {
@@ -229,11 +232,12 @@ export const App: React.FC = () => {
           <>
             {activeTab === 'dashboard' && (
               <>
-                <DashboardOverview overview={overview} currency={activeCurrency} />
+                <DashboardOverview overview={overview} currency={activeCurrency} dollarRate={dollarRate} />
                 <SubscriptionList
                   subscriptions={subscriptions}
                   categories={categories}
                   currency={activeCurrency}
+                  dollarRate={dollarRate}
                   onStatusChange={handleStatusChange}
                   onDelete={handleDelete}
                   onOpenGuidesModal={handleOpenGuidesModal}
@@ -359,6 +363,7 @@ export const App: React.FC = () => {
         user={user}
         subscriptions={subscriptions}
         currency={activeCurrency}
+        dollarRate={dollarRate}
         onLogout={handleLogout}
       />
 

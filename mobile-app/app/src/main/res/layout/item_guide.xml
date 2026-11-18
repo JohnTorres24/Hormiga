@@ -83,7 +83,7 @@
             android:layout_marginTop="14dp"
             android:backgroundTint="@color/rose_danger"
             android:text="Abrir Enlace de Cancelación Directa"
-            android:textColor="@color/surface_white"
+            android:textColor="@color/text_on_dark"
             android:textSize="13sp"
             android:textStyle="bold"
             app:cornerRadius="12dp"

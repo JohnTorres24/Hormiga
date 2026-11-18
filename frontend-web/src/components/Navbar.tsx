@@ -74,27 +74,32 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Navegación y herramientas */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Botón USD: Impacto del Dólar y TRM en vivo */}
+            {/* Botón Selector de Divisa Global: COP <-> USD (Siempre visible) */}
             <button
-              onClick={onOpenUsdModal}
-              title="Ver análisis de impacto de la TRM del dólar en tus suscripciones"
-              className="flex items-center space-x-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs"
+              onClick={onCurrencyToggle}
+              title={`Divisa actual: ${activeCurrency}. Haz clic para cambiar todo a ${activeCurrency === 'COP' ? 'Dólares (USD)' : 'Pesos (COP)'}.`}
+              className="flex items-center space-x-1.5 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/70 dark:hover:bg-indigo-900/80 border border-indigo-200 dark:border-indigo-700/80 text-indigo-700 dark:text-indigo-300 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs"
             >
-              <DollarSign className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="hidden sm:inline">USD: ${trmFormatted}</span>
-              <span className="sm:hidden">USD</span>
-              <span className="bg-emerald-600 text-white px-1.5 py-0.2 rounded text-[10px] font-extrabold">
-                TRM
+              <span className="text-xs">{activeCurrency === 'USD' ? '💵' : '💰'}</span>
+              <span className="hidden sm:inline">{activeCurrency === 'USD' ? 'USD ($)' : 'COP ($)'}</span>
+              <span className="sm:hidden">{activeCurrency}</span>
+              <span className="bg-indigo-600 dark:bg-indigo-500 text-white px-1.5 py-0.2 rounded text-[10px] font-black uppercase">
+                Cambiar
               </span>
             </button>
 
-            {/* Alternar Moneda Global (COP / USD) */}
+            {/* Botón TRM: Consulta de Tasa Representativa y Análisis Cambiario */}
             <button
-              onClick={onCurrencyToggle}
-              title={`Moneda de visualización activa: ${activeCurrency}. Haz clic para cambiar a ${activeCurrency === 'COP' ? 'USD' : 'COP'}.`}
-              className="hidden lg:flex items-center space-x-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-2.5 py-1.5 rounded-xl text-xs font-bold transition"
+              onClick={onOpenUsdModal}
+              title="Consultar la TRM oficial del día ($3.320 COP / 1 USD) y análisis de riesgo cambiario"
+              className="flex items-center space-x-1.5 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:hover:bg-emerald-900/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-xs"
             >
-              <span>{activeCurrency === 'USD' ? '💵 USD' : '💰 COP'}</span>
+              <DollarSign className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="hidden md:inline">TRM: ${trmFormatted}</span>
+              <span className="md:hidden">TRM</span>
+              <span className="bg-emerald-600 text-white px-1.5 py-0.2 rounded text-[10px] font-extrabold">
+                Oficial
+              </span>
             </button>
 
             {/* Botón Conmutador Modo Oscuro / Modo Claro */}

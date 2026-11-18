@@ -43,7 +43,7 @@ export const PeriodAnalysisView: React.FC<PeriodAnalysisViewProps> = ({ currency
             <Calendar className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
             Análisis Financiero por Mes y Año
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-medium">
             Audita la distribución de cobros día por día y por categoría
           </p>
         </div>
@@ -102,12 +102,12 @@ export const PeriodAnalysisView: React.FC<PeriodAnalysisViewProps> = ({ currency
                   >
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 shadow-2xs flex flex-col items-center justify-center">
-                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-400 uppercase leading-none">Día</span>
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-200 uppercase leading-none">Día</span>
                         <span className="text-base font-black text-indigo-600 dark:text-indigo-400 leading-none mt-0.5">{charge.day}</span>
                       </div>
                       <div>
                         <div className="font-bold text-sm text-slate-900 dark:text-white">{charge.subscriptionName}</div>
-                        <div className="text-xs text-slate-400 dark:text-slate-400 font-medium">
+                        <div className="text-xs text-slate-500 dark:text-slate-300 font-medium">
                           {charge.categoryName} • Monto original: {charge.currency} {Number(charge.amount).toLocaleString('es-CO')}
                         </div>
                       </div>
@@ -117,7 +117,7 @@ export const PeriodAnalysisView: React.FC<PeriodAnalysisViewProps> = ({ currency
                       <div className="font-extrabold text-sm text-slate-900 dark:text-white">
                         ${Number(charge.convertedAmount).toLocaleString('es-CO')}
                       </div>
-                      <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">{currency}</span>
+                      <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300">{currency}</span>
                     </div>
                   </div>
                 ))}

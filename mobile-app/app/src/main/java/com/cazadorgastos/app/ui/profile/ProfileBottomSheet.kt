@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.cazadorgastos.app.data.api.RetrofitClient
+import com.cazadorgastos.app.data.model.Subscription
 import com.cazadorgastos.app.data.session.SessionManager
 import com.cazadorgastos.app.databinding.BottomSheetProfileBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -73,6 +74,12 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
 
         lifecycleScope.launch {
             try {
+                // 1. Obtener tasa de cambio para conversiones cruzadas
+                val ratesRes = RetrofitClient.apiService.getCurrencyRates()
+                val dollarRate = ratesRes.data
+                    ?.firstOrNull { it.baseCurrency.equals("USD", ignoreCase = true) && it.targetCurrency.equals("COP", ignoreCase = true) }
+                    ?.rate ?: 3320.19
+
                 val res = RetrofitClient.apiService.getSubscriptions()
                 val allSubs = res.data ?: emptyList()
 
@@ -82,8 +89,18 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
                 val activeCount = activeSubs.size
                 val cancelledCount = cancelledSubs.size
 
-                val activeMonthlyTotal = activeSubs.sumOf { it.normalizedMonthlyCost ?: it.price }
-                val cancelledMonthlySavings = cancelledSubs.sumOf { it.normalizedMonthlyCost ?: it.price }
+                fun getConvertedCost(sub: Subscription): Double {
+                    val rawCost = sub.normalizedMonthlyCost ?: sub.price
+                    val subCurr = sub.currency.uppercase()
+                    return if (currency == "USD") {
+                        if (subCurr == "USD") rawCost else rawCost / dollarRate
+                    } else {
+                        if (subCurr == "COP") rawCost else rawCost * dollarRate
+                    }
+                }
+
+                val activeMonthlyTotal = activeSubs.sumOf { getConvertedCost(it) }
+                val cancelledMonthlySavings = cancelledSubs.sumOf { getConvertedCost(it) }
                 val cancelledYearlySavings = cancelledMonthlySavings * 12
 
                 binding.tvGhostNeutralizedBadge.text = "$cancelledCount neutralizadas"
@@ -101,7 +118,7 @@ class ProfileBottomSheet : BottomSheetDialogFragment() {
                 } else {
                     val sb = StringBuilder()
                     cancelledSubs.forEach { sub ->
-                        val cost = sub.normalizedMonthlyCost ?: sub.price
+                        val cost = getConvertedCost(sub)
                         sb.append("✅ ${sub.name} (${sub.provider}): Ahorro de ${formatMoney(cost, currency)} / mes\n")
                     }
                     binding.tvCancelledSubsList.text = sb.toString().trimEnd()

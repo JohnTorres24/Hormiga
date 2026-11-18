@@ -19,10 +19,18 @@ class SubscriptionAdapter(
 ) : RecyclerView.Adapter<SubscriptionAdapter.ViewHolder>() {
 
     private val items = mutableListOf<Subscription>()
+    var activeCurrency: String = "COP"
+    var dollarRate: Double = 3320.19
 
     fun submitList(newItems: List<Subscription>) {
         items.clear()
         items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    fun updateCurrency(newCurrency: String, rate: Double = 3320.19) {
+        this.activeCurrency = newCurrency
+        this.dollarRate = if (rate > 0) rate else 3320.19
         notifyDataSetChanged()
     }
 
@@ -57,16 +65,28 @@ class SubscriptionAdapter(
             }
             binding.tvSubProvider.text = "${sub.provider} • $cycleEs"
 
-            // Formato de precio
-            val formattedPrice = if (sub.currency.equals("USD", ignoreCase = true)) {
-                val nf = NumberFormat.getCurrencyInstance(Locale.US)
-                "${nf.format(sub.price)} USD"
-            } else {
-                val nf = NumberFormat.getCurrencyInstance(Locale("es", "CO"))
-                nf.maximumFractionDigits = 0
-                "${nf.format(sub.price)} COP"
+            // Formato de precio y conversión según divisa activa (COP <-> USD)
+            val subCurr = sub.currency.uppercase()
+            val tgtCurr = activeCurrency.uppercase()
+
+            val copFormat = NumberFormat.getCurrencyInstance(Locale("es", "CO")).apply {
+                maximumFractionDigits = 0
             }
-            binding.tvSubPrice.text = formattedPrice
+            val usdFormat = NumberFormat.getCurrencyInstance(Locale.US)
+
+            val displayPrice = if (subCurr == tgtCurr) {
+                if (tgtCurr == "USD") "${usdFormat.format(sub.price)} USD" else "${copFormat.format(sub.price)} COP"
+            } else {
+                if (tgtCurr == "USD") {
+                    val inUsd = sub.price / dollarRate
+                    "${usdFormat.format(inUsd)} USD (≈ ${copFormat.format(sub.price)} COP)"
+                } else {
+                    val inCop = sub.price * dollarRate
+                    "${copFormat.format(inCop)} COP (≈ ${usdFormat.format(sub.price)} USD)"
+                }
+            }
+            binding.tvSubPrice.text = displayPrice
+            binding.tvSubPrice.setTextColor(ContextCompat.getColor(context, R.color.primary))
 
             // Días restantes o alerta
             val days = sub.daysUntilNextBilling

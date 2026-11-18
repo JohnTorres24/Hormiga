@@ -117,6 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="COP"
+                    android:textColor="@color/text_primary"
                     android:textSize="11sp" />
 
                 <Button
@@ -125,6 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="USD"
+                    android:textColor="@color/text_primary"
                     android:textSize="11sp" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
         </LinearLayout>
@@ -152,6 +154,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="Mensual"
+                android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:layout_marginEnd="12dp" />
 
@@ -160,6 +163,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Anual"
+                android:textColor="@color/text_primary"
                 android:textSize="12sp"
                 android:layout_marginEnd="12dp" />
 
@@ -168,6 +172,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Semanal"
+                android:textColor="@color/text_primary"
                 android:textSize="12sp" />
         </RadioGroup>
 

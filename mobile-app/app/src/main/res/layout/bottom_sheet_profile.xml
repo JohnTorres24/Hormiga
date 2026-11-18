@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="JT"
-                    android:textColor="@color/surface_white"
+                    android:textColor="@color/text_on_dark"
                     android:textSize="24sp"
                     android:textStyle="bold" />
             </FrameLayout>

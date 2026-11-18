@@ -64,6 +64,8 @@ class MainActivity : AppCompatActivity() {
             val initial = DashboardFragment()
             currentFragment = initial
             replaceFragment(initial)
+        } else {
+            currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
         }
     }
 
@@ -145,8 +147,11 @@ class MainActivity : AppCompatActivity() {
             val newCurrency = sessionManager.toggleCurrency()
             updateCurrencyButtonText(newCurrency)
 
+            android.widget.Toast.makeText(this, "Mostrando valores en $newCurrency", android.widget.Toast.LENGTH_SHORT).show()
+
             // Notificar al fragment activo para recálculo financiero
-            (currentFragment as? CurrencyUpdatable)?.onCurrencyChanged(newCurrency)
+            val activeFrag = currentFragment ?: supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+            (activeFrag as? CurrencyUpdatable)?.onCurrencyChanged(newCurrency)
         }
 
         // Cerrar sesión
@@ -192,12 +197,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshCurrentFragment() {
-        when (val frag = currentFragment) {
+        val frag = currentFragment ?: supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        when (frag) {
             is DashboardFragment -> frag.reload()
             is SubscriptionsFragment -> frag.reload()
             else -> {
-                // Si está en otra pantalla, recargar
-                currentFragment?.let { replaceFragment(it) }
+                frag?.let { replaceFragment(it) }
             }
         }
     }

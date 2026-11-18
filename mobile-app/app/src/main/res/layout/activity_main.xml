@@ -45,7 +45,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="U"
-                        android:textColor="@color/surface_white"
+                        android:textColor="@color/text_on_dark"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </FrameLayout>
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="¡Hola!"
-                        android:textColor="@color/surface_white"
+                        android:textColor="@color/text_on_dark"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -89,44 +89,44 @@
                     android:layout_height="38dp"
                     android:layout_marginEnd="2dp"
                     app:icon="@drawable/ic_moon"
-                    app:iconTint="@color/surface_white" />
+                    app:iconTint="@color/text_on_dark" />
 
-                <!-- Botón Nuevo: Impacto USD / TRM Dólar en Vivo -->
+                <!-- Botón TRM Dólar en Vivo (Abre Simulador de Sensibilidad) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnUsdImpact"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
                     android:layout_marginEnd="4dp"
-                    android:backgroundTint="#0F766E"
+                    android:backgroundTint="#064E3B"
                     android:minWidth="0dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="💵 USD"
-                    android:textColor="#2DD4BF"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="📈 TRM"
+                    android:textColor="#6EE7B7"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     app:cornerRadius="999dp"
-                    app:strokeColor="#14B8A6"
+                    app:strokeColor="#10B981"
                     app:strokeWidth="1.5dp" />
 
-                <!-- Botón Selector de Moneda: COP / USD -->
+                <!-- Botón Conmutador de Divisa: Cambiar entre COP y USD -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnToggleCurrency"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
                     android:layout_marginEnd="4dp"
-                    android:backgroundTint="#312E81"
+                    android:backgroundTint="#1E1B4B"
                     android:minWidth="0dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
-                    android:text="COP"
-                    android:textColor="#38BDF8"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="💰 COP"
+                    android:textColor="#C7D2FE"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     app:cornerRadius="999dp"
-                    app:strokeColor="#6366F1"
+                    app:strokeColor="#818CF8"
                     app:strokeWidth="1.5dp" />
 
                 <!-- Botón Cerrar Sesión -->
@@ -136,7 +136,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     app:icon="@drawable/ic_logout"
-                    app:iconTint="@color/surface_white" />
+                    app:iconTint="@color/text_on_dark" />
 
             </LinearLayout>
 

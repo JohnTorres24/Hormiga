@@ -13,6 +13,7 @@ import com.cazadorgastos.app.R
 import com.cazadorgastos.app.adapter.SubscriptionAdapter
 import com.cazadorgastos.app.data.api.RetrofitClient
 import com.cazadorgastos.app.data.model.Subscription
+import com.cazadorgastos.app.data.session.SessionManager
 import com.cazadorgastos.app.databinding.FragmentSubscriptionsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -22,6 +23,8 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
     private var _binding: FragmentSubscriptionsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: SubscriptionAdapter
+    private lateinit var sessionManager: SessionManager
+    private var dollarRate: Double = 3320.19
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,6 +35,7 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sessionManager = SessionManager(requireContext())
 
         adapter = SubscriptionAdapter { sub ->
             MaterialAlertDialogBuilder(requireContext())
@@ -44,6 +48,9 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
                 .show()
         }
 
+        val activeCurrency = sessionManager.getCurrency()
+        adapter.activeCurrency = activeCurrency
+
         binding.recyclerViewSubscriptions.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewSubscriptions.adapter = adapter
 
@@ -52,10 +59,27 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
             loadSubscriptions()
         }
 
+        loadDollarRate()
         loadSubscriptions()
     }
 
+    private fun loadDollarRate() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val ratesRes = RetrofitClient.apiService.getCurrencyRates()
+                val rate = ratesRes.data
+                    ?.firstOrNull { it.baseCurrency.equals("USD", ignoreCase = true) && it.targetCurrency.equals("COP", ignoreCase = true) }
+                    ?.rate
+                if (rate != null && rate > 0) {
+                    dollarRate = rate
+                    adapter.dollarRate = rate
+                }
+            } catch (_: Exception) {}
+        }
+    }
+
     override fun onCurrencyChanged(newCurrency: String) {
+        adapter.updateCurrency(newCurrency, dollarRate)
         loadSubscriptions()
     }
 
@@ -96,6 +120,9 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
 
     private fun loadSubscriptions() {
         binding.swipeRefresh.isRefreshing = true
+        val activeCurrency = sessionManager.getCurrency()
+        adapter.updateCurrency(activeCurrency, dollarRate)
+
         viewLifecycleOwner.lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getSubscriptions("active")
@@ -103,7 +130,7 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
                     val list = response.data
                     adapter.submitList(list)
 
-                    binding.tvSubCountBadge.text = "${list.size} activas"
+                    binding.tvSubCountBadge.text = "${list.size} activas ($activeCurrency)"
 
                     if (list.isEmpty()) {
                         binding.layoutEmptySubscriptions.visibility = View.VISIBLE
