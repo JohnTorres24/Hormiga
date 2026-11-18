@@ -11,14 +11,18 @@ import {
   deleteSubscription,
   updateSubscriptionStatus,
   dismissAlert,
-  triggerAlertScan
+  triggerAlertScan,
+  getCurrentUser,
+  setCurrentUser,
+  logoutUser
 } from './api';
 import {
   Subscription,
   AnalyticsOverview,
   NotificationLog,
   Category,
-  CancellationGuide
+  CancellationGuide,
+  UserSession
 } from './types';
 import { Navbar } from './components/Navbar';
 import { AlertsBanner } from './components/AlertsBanner';
@@ -28,6 +32,9 @@ import { PeriodAnalysisView } from './components/PeriodAnalysisView';
 import { ProfitabilityView } from './components/ProfitabilityView';
 import { CancellationGuidesModal } from './components/CancellationGuidesModal';
 import { SubscriptionModal } from './components/SubscriptionModal';
+import { UsdImpactModal } from './components/UsdImpactModal';
+import { ProfileModal } from './components/ProfileModal';
+import { AuthModal } from './components/AuthModal';
 import { Bell, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -37,19 +44,47 @@ export const App: React.FC = () => {
   const [alerts, setAlerts] = useState<NotificationLog[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [guides, setGuides] = useState<CancellationGuide[]>([]);
-  const [dollarRate, setDollarRate] = useState<number>(4200);
+  const [dollarRate, setDollarRate] = useState<number>(3320.19);
   const [activeCurrency, setActiveCurrency] = useState<string>('COP');
   const [loading, setLoading] = useState(true);
+
+  // Usuario y Sesión
+  const [user, setUser] = useState<UserSession>(getCurrentUser());
+
+  // Modo Oscuro / Claro
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('cazador_theme');
+    if (saved) return saved === 'dark';
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
   // Modales
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
   const [isGuidesModalOpen, setIsGuidesModalOpen] = useState(false);
+  const [isUsdModalOpen, setIsUsdModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedGuideSearch, setSelectedGuideSearch] = useState('');
   const [editingSubscription, setEditingSubscription] = useState<Subscription | null>(null);
 
+  // Efecto para sincronizar el modo oscuro con el elemento HTML raíz
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('cazador_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('cazador_theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const handleThemeToggle = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   useEffect(() => {
     loadAllData();
-  }, []);
+  }, [user]);
 
   const loadAllData = async () => {
     setLoading(true);
@@ -70,7 +105,7 @@ export const App: React.FC = () => {
       setGuides(guidesData);
 
       const copRate = ratesData.find(r => r.targetCurrency === 'COP');
-      if (copRate) {
+      if (copRate && copRate.rate) {
         setDollarRate(Number(copRate.rate));
       }
     } catch (err) {
@@ -137,16 +172,33 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    logoutUser();
+    setIsProfileModalOpen(false);
+    setIsAuthModalOpen(true);
+  };
+
+  const handleAuthSuccess = (loggedUser: UserSession) => {
+    setUser(loggedUser);
+    setCurrentUser(loggedUser);
+    setIsAuthModalOpen(false);
+  };
+
   const pendingAlerts = alerts.filter(a => a.status === 'pending');
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col text-slate-900 dark:text-slate-100 selection:bg-indigo-500 selection:text-white transition-colors duration-200">
       {/* Barra de Navegación Principal */}
       <Navbar
         dollarRate={dollarRate}
         activeCurrency={activeCurrency}
         onCurrencyToggle={handleCurrencyToggle}
+        isDarkMode={isDarkMode}
+        onThemeToggle={handleThemeToggle}
         pendingAlertsCount={pendingAlerts.length}
+        user={user}
+        onOpenProfileModal={() => setIsProfileModalOpen(true)}
+        onOpenUsdModal={() => setIsUsdModalOpen(true)}
         onOpenNewModal={() => {
           setEditingSubscription(null);
           setIsNewModalOpen(true);
@@ -167,9 +219,11 @@ export const App: React.FC = () => {
         />
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-            <RefreshCw className="w-8 h-8 animate-spin text-indigo-600 mb-3" />
-            <p className="font-semibold text-sm">Sincronizando con el servidor Spring Boot y Supabase...</p>
+          <div className="flex flex-col items-center justify-center py-24 text-slate-400 dark:text-slate-500">
+            <RefreshCw className="w-8 h-8 animate-spin text-indigo-600 dark:text-indigo-400 mb-3" />
+            <p className="font-semibold text-sm text-slate-600 dark:text-slate-300">
+              Sincronizando con el servidor Spring Boot y Supabase...
+            </p>
           </div>
         ) : (
           <>
@@ -203,19 +257,20 @@ export const App: React.FC = () => {
             )}
 
             {activeTab === 'alerts' && (
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-                <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-100">
+              <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-xs">
+                <div className="flex items-center justify-between mb-6 pb-3 border-b border-slate-100 dark:border-slate-700">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <Bell className="w-5 h-5 text-indigo-600" /> Historial de Alertas Pre-Cobro (48 Horas)
+                    <h3 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <Bell className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                      Historial de Alertas Pre-Cobro (48 Horas)
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                       Notificaciones generadas para evitar cobros sorpresa o vencimientos de pruebas gratuitas
                     </p>
                   </div>
                   <button
                     onClick={handleForceScan}
-                    className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold transition"
+                    className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold transition"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     <span>Escanear 48h Ahora</span>
@@ -223,33 +278,33 @@ export const App: React.FC = () => {
                 </div>
 
                 {alerts.length === 0 ? (
-                  <div className="text-center py-12 text-slate-400 text-xs">
+                  <div className="text-center py-12 text-slate-400 dark:text-slate-500 text-xs">
                     <ShieldCheck className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-                    <p className="font-bold text-slate-700">Sin alertas pendientes.</p>
-                    <p className="text-slate-400">Tus suscripciones no tienen cobros programados en las próximas 48 horas.</p>
+                    <p className="font-bold text-slate-700 dark:text-slate-300">Sin alertas pendientes.</p>
+                    <p className="text-slate-400 dark:text-slate-500">Tus suscripciones no tienen cobros programados en las próximas 48 horas.</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {alerts.map(a => (
                       <div
                         key={a.id}
-                        className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex items-center justify-between gap-4"
+                        className="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-750/30 flex items-center justify-between gap-4"
                       >
                         <div>
                           <div className="flex items-center gap-2">
-                            <h5 className="font-bold text-sm text-slate-900">{a.title}</h5>
+                            <h5 className="font-bold text-sm text-slate-900 dark:text-white">{a.title}</h5>
                             <span
                               className={`text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${
                                 a.status === 'pending'
-                                  ? 'bg-rose-100 text-rose-700'
-                                  : 'bg-slate-200 text-slate-600'
+                                  ? 'bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300'
+                                  : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                               }`}
                             >
                               {a.status === 'pending' ? 'Activa' : 'Descartada'}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-600 mt-1">{a.message}</p>
-                          <span className="text-[10px] text-slate-400 mt-2 block">
+                          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">{a.message}</p>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 block">
                             Programada para: {a.scheduledFor} • Servicio: {a.subscriptionName}
                           </span>
                         </div>
@@ -257,7 +312,7 @@ export const App: React.FC = () => {
                         {a.status === 'pending' && (
                           <button
                             onClick={() => handleDismissAlert(a.id)}
-                            className="text-xs font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-300 px-3 py-1.5 rounded-lg transition shrink-0"
+                            className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 px-3 py-1.5 rounded-xl transition shrink-0"
                           >
                             Descartar
                           </button>
@@ -291,10 +346,32 @@ export const App: React.FC = () => {
         initialSearch={selectedGuideSearch}
       />
 
+      <UsdImpactModal
+        isOpen={isUsdModalOpen}
+        onClose={() => setIsUsdModalOpen(false)}
+        dollarRate={dollarRate}
+        subscriptions={subscriptions}
+      />
+
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={user}
+        subscriptions={subscriptions}
+        currency={activeCurrency}
+        onLogout={handleLogout}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
       {/* Pie de Página */}
-      <footer className="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 font-medium">
+      <footer className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-400 dark:text-slate-500 font-medium transition-colors">
         <p>Cazador de Gastos Hormiga • Gestor de Suscripciones y Cobros Recurrentes</p>
-        <p className="text-[11px] text-slate-400 mt-1">
+        <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
           Backend: Java 21 / Spring Boot 3 (IntelliJ IDEA) • Base de Datos: Supabase PostgreSQL • Despliegue: Render
         </p>
       </footer>

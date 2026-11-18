@@ -157,3 +157,11 @@ export interface ProfitabilityAnalysis {
   annualGhostExpenseTotal: number;
   currency: string;
 }
+
+export interface UserSession {
+  id: string;
+  fullName: string;
+  email: string;
+  preferredCurrency: string;
+}
+

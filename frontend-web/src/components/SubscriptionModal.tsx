@@ -50,7 +50,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       setCurrency('COP');
       setBillingCycle('monthly');
       setCategoryId(categories[0]?.id || '');
-      // Predeterminar fecha a 30 días en el futuro
       const future = new Date();
       future.setDate(future.getDate() + 30);
       setNextBillingDate(future.toISOString().split('T')[0]);
@@ -63,7 +62,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Cálculo de costo anualizado proyectado en tiempo real
   const numPrice = Number(price) || 0;
   let annualized = numPrice;
   if (billingCycle === 'monthly') annualized = numPrice * 12;
@@ -101,15 +99,15 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 border border-slate-200 overflow-y-auto max-h-[90vh]">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-xl w-full p-6 border border-slate-200 dark:border-slate-700 overflow-y-auto max-h-[90vh]">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700">
           <div>
-            <h3 className="text-base font-black text-slate-900">
+            <h3 className="text-base font-black text-slate-900 dark:text-white">
               {initialData ? 'Editar Suscripción' : 'Registrar Nueva Suscripción'}
             </h3>
-            <p className="text-xs text-slate-500 font-medium">Configura los cobros y activa el cazador de gastos hormiga</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Configura los cobros y activa el cazador de gastos hormiga</p>
           </div>
-          <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg">
+          <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -117,36 +115,36 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4 mt-4 text-xs font-semibold">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-700 mb-1">Nombre del Servicio *</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Nombre del Servicio *</label>
               <input
                 type="text"
                 required
                 placeholder="Ej. Netflix 4K, Spotify Familiar..."
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
               />
             </div>
             <div>
-              <label className="block text-slate-700 mb-1">Proveedor / Compañía *</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Proveedor / Compañía *</label>
               <input
                 type="text"
                 required
                 placeholder="Ej. Netflix, Spotify, Apple, OpenAI..."
                 value={provider}
                 onChange={e => setProvider(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3">
             <div className="col-span-1">
-              <label className="block text-slate-700 mb-1">Moneda</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Moneda</label>
               <select
                 value={currency}
                 onChange={e => setCurrency(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="COP">COP ($)</option>
                 <option value="USD">USD ($)</option>
@@ -155,7 +153,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               </select>
             </div>
             <div className="col-span-2">
-              <label className="block text-slate-700 mb-1">Precio Cobrado *</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Precio Cobrado *</label>
               <input
                 type="number"
                 step="any"
@@ -163,18 +161,18 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 placeholder="44900"
                 value={price}
                 onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 font-bold text-slate-900"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 font-bold"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-slate-700 mb-1">Ciclo de Cobro</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Ciclo de Cobro</label>
               <select
                 value={billingCycle}
                 onChange={e => setBillingCycle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="monthly">Mensual</option>
                 <option value="yearly">Anual</option>
@@ -184,11 +182,11 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               </select>
             </div>
             <div>
-              <label className="block text-slate-700 mb-1">Categoría</label>
+              <label className="block text-slate-700 dark:text-slate-300 mb-1">Categoría</label>
               <select
                 value={categoryId}
                 onChange={e => setCategoryId(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
               >
                 {categories.map(c => (
                   <option key={c.id} value={c.id}>
@@ -200,18 +198,18 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-slate-700 mb-1">Próxima Fecha de Cobro *</label>
+            <label className="block text-slate-700 dark:text-slate-300 mb-1">Próxima Fecha de Cobro *</label>
             <input
               type="date"
               required
               value={nextBillingDate}
               onChange={e => setNextBillingDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
           {/* Control de Prueba Gratuita */}
-          <div className="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100">
+          <div className="bg-indigo-50/60 dark:bg-indigo-950/40 p-3 rounded-2xl border border-indigo-100 dark:border-indigo-900/60">
             <label className="flex items-center space-x-2 cursor-pointer mb-2">
               <input
                 type="checkbox"
@@ -219,12 +217,12 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 onChange={e => setIsFreeTrial(e.target.checked)}
                 className="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500"
               />
-              <span className="font-bold text-indigo-900">¿Es un periodo de prueba gratuita (Free Trial)?</span>
+              <span className="font-bold text-indigo-900 dark:text-indigo-200">¿Es un periodo de prueba gratuita (Free Trial)?</span>
             </label>
 
             {isFreeTrial && (
               <div>
-                <label className="block text-indigo-800 mb-1 text-[11px]">
+                <label className="block text-indigo-800 dark:text-indigo-300 mb-1 text-[11px]">
                   Fecha límite en que expira la prueba (alerta 48h antes):
                 </label>
                 <input
@@ -232,24 +230,24 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   required={isFreeTrial}
                   value={trialEndDate}
                   onChange={e => setTrialEndDate(e.target.value)}
-                  className="w-full px-3 py-1.5 bg-white border border-indigo-200 rounded-lg text-xs"
+                  className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 rounded-xl text-xs text-slate-900 dark:text-white"
                 />
               </div>
             )}
           </div>
 
           {/* Diagnóstico Cazador de Gastos Hormiga */}
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2">
-            <div className="font-bold text-slate-900 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-indigo-600" /> Evaluación de Rentabilidad & Utilidad
+          <div className="bg-slate-50 dark:bg-slate-750/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2">
+            <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Evaluación de Rentabilidad & Utilidad
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-slate-600 text-[11px] mb-1">¿Con qué frecuencia lo usas?</label>
+                <label className="block text-slate-600 dark:text-slate-400 text-[11px] mb-1">¿Con qué frecuencia lo usas?</label>
                 <select
                   value={usageFrequency}
                   onChange={e => setUsageFrequency(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg bg-white"
+                  className="w-full px-2.5 py-1.5 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
                 >
                   <option value="daily">Todos los días</option>
                   <option value="weekly">Semanalmente</option>
@@ -259,7 +257,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 </select>
               </div>
               <div>
-                <label className="block text-slate-600 text-[11px] mb-1">
+                <label className="block text-slate-600 dark:text-slate-400 text-[11px] mb-1">
                   Valor Percibido (1 = Inútil, 5 = Esencial): {perceivedValue}★
                 </label>
                 <input
@@ -275,7 +273,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
           {/* Cálculo de impacto previo */}
-          <div className="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between">
+          <div className="bg-slate-900 dark:bg-slate-950 text-white p-3.5 rounded-2xl flex items-center justify-between border border-slate-800">
             <div>
               <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Impacto Anualizado</span>
               <div className="text-base font-black text-indigo-400">
@@ -289,7 +287,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition"
+              className="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition"
             >
               Cancelar
             </button>
