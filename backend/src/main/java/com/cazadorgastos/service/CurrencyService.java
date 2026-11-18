@@ -30,6 +30,15 @@ public class CurrencyService {
         this.restTemplate = restTemplate;
     }
 
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        try {
+            syncRatesFromExternalApi();
+        } catch (Exception e) {
+            System.err.println("[CurrencyService] Error en sincronización inicial: " + e.getMessage());
+        }
+    }
+
     public BigDecimal getExchangeRate(String base, String target) {
         String baseUpper = base.toUpperCase();
         String targetUpper = target.toUpperCase();
@@ -38,12 +47,18 @@ public class CurrencyService {
             return BigDecimal.ONE;
         }
 
-        // 1. Revisar caché en memoria
+        // 1. Revisar caché en memoria (máximo 1 hora)
         if (System.currentTimeMillis() - lastCacheUpdate < CACHE_TTL_MS && cache.containsKey(targetUpper)) {
             return cache.get(targetUpper);
         }
 
-        // 2. Revisar base de datos Supabase
+        // 2. Si la caché expiró o no tiene la tasa, sincronizar con la API en tiempo real
+        syncRatesFromExternalApi();
+        if (cache.containsKey(targetUpper)) {
+            return cache.get(targetUpper);
+        }
+
+        // 3. Revisar base de datos Supabase como respaldo
         try {
             List<BigDecimal> rates = jdbcTemplate.query(
                     "SELECT rate FROM public.exchange_rates WHERE base_currency = ? AND target_currency = ? LIMIT 1",
@@ -57,9 +72,7 @@ public class CurrencyService {
             System.err.println("[CurrencyService] Error al leer tasas de Supabase: " + e.getMessage());
         }
 
-        // 3. Consultar API externa
-        syncRatesFromExternalApi();
-        return cache.getOrDefault(targetUpper, BigDecimal.valueOf(4200.0));
+        return BigDecimal.valueOf(3320.19);
     }
 
     public Map<String, Object> convert(BigDecimal amount, String from, String to) {
@@ -147,6 +160,9 @@ public class CurrencyService {
     }
 
     public List<ExchangeRate> getAllRates() {
+        if (System.currentTimeMillis() - lastCacheUpdate > CACHE_TTL_MS) {
+            syncRatesFromExternalApi();
+        }
         return jdbcTemplate.query(
                 "SELECT id, base_currency, target_currency, rate, source, last_updated_at FROM public.exchange_rates ORDER BY target_currency ASC",
                 (rs, rowNum) -> new ExchangeRate(

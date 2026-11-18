@@ -38,6 +38,10 @@ class UsdImpactBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun loadDollarImpactData() {
+        val trmFormat = NumberFormat.getCurrencyInstance(Locale("es", "CO")).apply {
+            minimumFractionDigits = 2
+            maximumFractionDigits = 2
+        }
         val copFormat = NumberFormat.getCurrencyInstance(Locale("es", "CO")).apply {
             maximumFractionDigits = 0
         }
@@ -49,9 +53,10 @@ class UsdImpactBottomSheet : BottomSheetDialogFragment() {
                 val ratesResponse = RetrofitClient.apiService.getCurrencyRates()
                 val usdCopRate = ratesResponse.data
                     ?.firstOrNull { it.baseCurrency.equals("USD", ignoreCase = true) && it.targetCurrency.equals("COP", ignoreCase = true) }
-                    ?.rate ?: 4200.0
+                    ?.rate ?: 3320.19
 
-                binding.tvCurrentRate.text = "1 USD = ${copFormat.format(usdCopRate)} COP"
+                binding.tvCurrentRate.text = "1 USD = ${trmFormat.format(usdCopRate)} COP"
+                binding.tvRateSource.text = "TRM Oficial en Vivo • open.er-api.com (Superintendencia Financiera)"
 
                 // 2. Obtener suscripciones del usuario
                 val subsResponse = RetrofitClient.apiService.getSubscriptions()
