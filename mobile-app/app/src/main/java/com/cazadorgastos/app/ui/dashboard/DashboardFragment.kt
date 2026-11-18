@@ -39,6 +39,13 @@ class DashboardFragment : Fragment(), CurrencyUpdatable {
             loadDashboardData()
         }
 
+        binding.tvLiveRateBadge.setOnClickListener {
+            com.cazadorgastos.app.ui.currency.UsdImpactBottomSheet().show(
+                parentFragmentManager,
+                com.cazadorgastos.app.ui.currency.UsdImpactBottomSheet.TAG
+            )
+        }
+
         loadDashboardData()
     }
 

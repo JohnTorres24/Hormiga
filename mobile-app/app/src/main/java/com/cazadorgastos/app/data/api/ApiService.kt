@@ -20,12 +20,24 @@ interface ApiService {
 
     // Suscripciones
     @GET("subscriptions")
-    suspend fun getSubscriptions(): ApiResponse<List<Subscription>>
+    suspend fun getSubscriptions(
+        @Query("status") status: String? = null
+    ): ApiResponse<List<Subscription>>
 
     @POST("subscriptions")
     suspend fun createSubscription(
         @Body req: CreateSubscriptionRequest
     ): ApiResponse<Map<String, Any>>
+
+    @PATCH("subscriptions/{id}/status")
+    suspend fun updateSubscriptionStatus(
+        @Path("id") id: String,
+        @Body body: Map<String, String>
+    ): ApiResponse<Map<String, Any>>
+
+    // Tasas de Cambio (TRM en Vivo)
+    @GET("currency/rates")
+    suspend fun getCurrencyRates(): ApiResponse<List<ExchangeRateModel>>
 
     // Alertas 48h
     @GET("notifications/alerts")

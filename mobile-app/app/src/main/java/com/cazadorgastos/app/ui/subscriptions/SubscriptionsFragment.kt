@@ -12,6 +12,7 @@ import com.cazadorgastos.app.CurrencyUpdatable
 import com.cazadorgastos.app.R
 import com.cazadorgastos.app.adapter.SubscriptionAdapter
 import com.cazadorgastos.app.data.api.RetrofitClient
+import com.cazadorgastos.app.data.model.Subscription
 import com.cazadorgastos.app.databinding.FragmentSubscriptionsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -33,11 +34,13 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
         super.onViewCreated(view, savedInstanceState)
 
         adapter = SubscriptionAdapter { sub ->
-            // Si no tiene enlace directo, mostrar diálogo de guía
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Cancelar ${sub.name}")
-                .setMessage("Esta suscripción no tiene un enlace de cancelación configurado. Puedes revisar la sección de Guías de Cancelación en el menú inferior para seguir los pasos.")
-                .setPositiveButton("Entendido", null)
+                .setTitle("Dar de Baja «${sub.name}»")
+                .setMessage("¿Deseas confirmar la baja de este servicio? Al cancelarlo, dejará de cobrarse y el dinero protegido se sumará de forma permanente a tu perfil de ahorro.")
+                .setPositiveButton("Confirmar Cancelación") { _, _ ->
+                    cancelSubscription(sub)
+                }
+                .setNegativeButton("Volver", null)
                 .show()
         }
 
@@ -60,11 +63,42 @@ class SubscriptionsFragment : Fragment(), CurrencyUpdatable {
         loadSubscriptions()
     }
 
+    private fun cancelSubscription(sub: Subscription) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val res = RetrofitClient.apiService.updateSubscriptionStatus(
+                    sub.id,
+                    mapOf("status" to "cancelled")
+                )
+                if (res.success) {
+                    Toast.makeText(
+                        requireContext(),
+                        "¡«${sub.name}» dada de baja! Se ha sumado a tus ahorros en el perfil.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    loadSubscriptions()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        res.error ?: "Error al cancelar la suscripción",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Error de conexión: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
     private fun loadSubscriptions() {
         binding.swipeRefresh.isRefreshing = true
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val response = RetrofitClient.apiService.getSubscriptions()
+                val response = RetrofitClient.apiService.getSubscriptions("active")
                 if (response.success && response.data != null) {
                     val list = response.data
                     adapter.submitList(list)

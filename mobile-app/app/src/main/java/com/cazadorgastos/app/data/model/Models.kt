@@ -101,3 +101,12 @@ data class CancellationGuide(
     @SerializedName("cancellationTrapsWarning") val cancellationTrapsWarning: String?,
     @SerializedName("instructionsJson") val instructionsJson: String?
 )
+
+data class ExchangeRateModel(
+    @SerializedName("id") val id: String,
+    @SerializedName("baseCurrency") val baseCurrency: String,
+    @SerializedName("targetCurrency") val targetCurrency: String,
+    @SerializedName("rate") val rate: Double,
+    @SerializedName("source") val source: String?,
+    @SerializedName("lastUpdatedAt") val lastUpdatedAt: String?
+)

@@ -10,6 +10,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.cazadorgastos.app.data.session.SessionManager
 import com.cazadorgastos.app.databinding.ActivityMainBinding
+import com.cazadorgastos.app.ui.currency.UsdImpactBottomSheet
+import com.cazadorgastos.app.ui.profile.ProfileBottomSheet
 import com.cazadorgastos.app.ui.alerts.AlertsFragment
 import com.cazadorgastos.app.ui.dashboard.DashboardFragment
 import com.cazadorgastos.app.ui.guides.GuidesFragment
@@ -103,6 +105,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupListeners() {
+        // Abrir Perfil de Usuario con Ahorro por Cancelaciones
+        binding.btnUserProfile.setOnClickListener {
+            val anim = AnimationUtils.loadAnimation(this, R.anim.card_pop)
+            binding.btnUserProfile.startAnimation(anim)
+            ProfileBottomSheet().show(supportFragmentManager, ProfileBottomSheet.TAG)
+        }
+
+        binding.layoutUserInfo.setOnClickListener {
+            ProfileBottomSheet().show(supportFragmentManager, ProfileBottomSheet.TAG)
+        }
+
+        // Botón Nuevo: Abrir Análisis de Impacto del Dólar (USD / TRM)
+        binding.btnUsdImpact.setOnClickListener {
+            val anim = AnimationUtils.loadAnimation(this, R.anim.card_pop)
+            binding.btnUsdImpact.startAnimation(anim)
+            UsdImpactBottomSheet().show(supportFragmentManager, UsdImpactBottomSheet.TAG)
+        }
+
         // Alternar Modo Oscuro <-> Modo Claro
         binding.btnToggleTheme.setOnClickListener {
             val anim = AnimationUtils.loadAnimation(this, R.anim.card_pop)
