@@ -21,6 +21,7 @@ build/
 app/build/
 local.properties
 *.apk
+!release/*.apk
 *.aab
 .cxx/
 captures/
