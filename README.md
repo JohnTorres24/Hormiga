@@ -208,5 +208,5 @@ Este proyecto se encuentra licenciado bajo los términos de la Licencia MIT. Con
 
 <p align="center">
   <b>Desarrollado con dedicación para erradicar las fugas de capital y empoderar la salud financiera personal.</b><br>
-  <sub>Autor: <b>Jhonatan Torres</b> (<a href="https://github.com/JohnTorres24">@JohnTorres24</a>)</sub>
+  <sub>Autor: <b>Jhon Torres</b> (<a href="https://github.com/JohnTorres24">@JohnTorres24</a>)</sub>
 </p>
