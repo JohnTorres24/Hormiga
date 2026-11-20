@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, Mail, User, AlertCircle, LogIn, UserPlus, Sun, Moon, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { Lock, Mail, User, AlertCircle, LogIn, UserPlus, Sun, Moon, ShieldCheck } from 'lucide-react';
 import { loginUser, registerUser } from '../api';
 import { UserSession } from '../types';
 
@@ -44,26 +44,6 @@ export const LoginView: React.FC<LoginViewProps> = ({
       }
     } catch (err: any) {
       setError(err.message || 'Error en la autenticación. Por favor, verifica tus datos.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleQuickDemoLogin = async () => {
-    setError(null);
-    setLoading(true);
-    try {
-      const user = await loginUser('jhonatan.torres@organizacion.com', '123456');
-      onSuccess(user);
-    } catch {
-      // Si la cuenta remota requiere creación previa o falla la red, establecer sesión local de demostración
-      const fallbackUser: UserSession = {
-        id: '11111111-1111-1111-1111-111111111111',
-        email: 'jhonatan.torres@organizacion.com',
-        fullName: 'Jhonatan Torres',
-        preferredCurrency: 'COP'
-      };
-      onSuccess(fallbackUser);
     } finally {
       setLoading(false);
     }
@@ -244,32 +224,6 @@ export const LoginView: React.FC<LoginViewProps> = ({
               )}
             </button>
           </form>
-
-          {/* Tarjeta de Acceso Rápido con Cuenta de Demostración */}
-          <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800">
-            <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/80">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[11px] font-black uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-500" /> Acceso Rápido de Evaluación
-                </span>
-                <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
-                  1 Clic
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
-                Ingresa inmediatamente con la cuenta oficial preconfigurada para probar todas las funciones financieras.
-              </p>
-              <button
-                type="button"
-                onClick={handleQuickDemoLogin}
-                disabled={loading}
-                className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold transition flex items-center justify-center space-x-1.5"
-              >
-                <span>Acceder como Jhonatan Torres</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
         </div>
       </main>
 
