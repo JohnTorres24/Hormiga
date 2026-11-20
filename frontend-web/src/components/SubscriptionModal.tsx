@@ -69,9 +69,22 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   else if (billingCycle === 'quarterly') annualized = numPrice * 4;
   else if (billingCycle === 'biannual') annualized = numPrice * 2;
 
+  // Fecha actual en formato YYYY-MM-DD para validación mínima
+  const todayStr = new Date().toISOString().split('T')[0];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !provider || price === '' || !nextBillingDate) return;
+
+    if (nextBillingDate < todayStr) {
+      alert('La fecha del próximo cobro no puede ser anterior al día actual.');
+      return;
+    }
+
+    if (isFreeTrial && trialEndDate && trialEndDate < todayStr) {
+      alert('La fecha de vencimiento de la prueba no puede ser anterior al día actual.');
+      return;
+    }
 
     setLoading(true);
     try {
@@ -202,6 +215,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <input
               type="date"
               required
+              min={todayStr}
               value={nextBillingDate}
               onChange={e => setNextBillingDate(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"
@@ -228,6 +242,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 <input
                   type="date"
                   required={isFreeTrial}
+                  min={todayStr}
                   value={trialEndDate}
                   onChange={e => setTrialEndDate(e.target.value)}
                   className="w-full px-3 py-1.5 bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-800 rounded-xl text-xs text-slate-900 dark:text-white"
@@ -237,7 +252,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
           {/* Diagnóstico Cazador de Gastos Hormiga */}
-          <div className="bg-slate-50 dark:bg-slate-750/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2">
+          <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2">
             <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" /> Evaluación de Rentabilidad & Utilidad
             </div>

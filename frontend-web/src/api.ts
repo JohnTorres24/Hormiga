@@ -13,14 +13,8 @@ import {
 const API_BASE = (import.meta as any).env?.VITE_API_BASE_URL || 'https://cazador-gastos-hormiga-api.onrender.com/api';
 
 const SESSION_KEY = 'cazador_user_session';
-const DEFAULT_USER: UserSession = {
-  id: '3fc6e0b1-74cd-4f12-bd35-5b284d90c32e',
-  fullName: 'Jhonatan Torres',
-  email: 'jhonatan.torres@organizacion.com',
-  preferredCurrency: 'COP'
-};
 
-export function getCurrentUser(): UserSession {
+export function getCurrentUser(): UserSession | null {
   try {
     const raw = localStorage.getItem(SESSION_KEY);
     if (raw) {
@@ -29,7 +23,7 @@ export function getCurrentUser(): UserSession {
   } catch (e) {
     console.error('Error al recuperar sesión local:', e);
   }
-  return DEFAULT_USER;
+  return null;
 }
 
 export function setCurrentUser(user: UserSession): void {
@@ -52,7 +46,7 @@ function getAuthHeaders(): HeadersInit {
   const user = getCurrentUser();
   return {
     'Content-Type': 'application/json',
-    'x-user-id': user.id
+    ...(user?.id ? { 'x-user-id': user.id } : {})
   };
 }
 
@@ -123,6 +117,9 @@ export async function fetchSubscriptions(status?: string, categoryId?: string): 
 
 export async function createSubscription(data: Partial<Subscription>): Promise<void> {
   const user = getCurrentUser();
+  if (!user) {
+    throw new Error('Debes iniciar sesión para registrar una suscripción.');
+  }
   const payload = {
     ...data,
     userId: user.id

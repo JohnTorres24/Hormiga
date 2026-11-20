@@ -67,7 +67,7 @@ class AddSubscriptionBottomSheet(
 
         binding.btnPickNextBillingDate.setOnClickListener {
             val c = Calendar.getInstance()
-            DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
                     c.set(year, month, dayOfMonth)
@@ -77,7 +77,10 @@ class AddSubscriptionBottomSheet(
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            )
+            // Impedir selección de fechas anteriores al día actual
+            datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+            datePickerDialog.show()
         }
 
         // Control de prueba gratuita
@@ -93,7 +96,7 @@ class AddSubscriptionBottomSheet(
 
         binding.btnPickTrialEndDate.setOnClickListener {
             val c = Calendar.getInstance()
-            DatePickerDialog(
+            val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 { _, year, month, dayOfMonth ->
                     c.set(year, month, dayOfMonth)
@@ -103,7 +106,10 @@ class AddSubscriptionBottomSheet(
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            )
+            // Impedir selección de fechas anteriores al día actual
+            datePickerDialog.datePicker.minDate = System.currentTimeMillis()
+            datePickerDialog.show()
         }
 
         // Slider de calificación de utilidad
@@ -157,6 +163,46 @@ class AddSubscriptionBottomSheet(
             2 -> "monthly"
             3 -> "weekly"
             else -> "daily"
+        }
+
+        // Validación estricta: impedir fechas anteriores al día actual
+        val today = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+
+        try {
+            val billingCal = Calendar.getInstance().apply {
+                val parsed = dateFormat.parse(selectedNextBillingDate)
+                if (parsed != null) time = parsed
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            if (billingCal.before(today)) {
+                Toast.makeText(requireContext(), "La fecha de cobro no puede ser anterior al día actual.", Toast.LENGTH_LONG).show()
+                return
+            }
+        } catch (_: Exception) {}
+
+        if (isFreeTrial && selectedTrialEndDate != null) {
+            try {
+                val trialCal = Calendar.getInstance().apply {
+                    val parsed = dateFormat.parse(selectedTrialEndDate!!)
+                    if (parsed != null) time = parsed
+                    set(Calendar.HOUR_OF_DAY, 0)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                if (trialCal.before(today)) {
+                    Toast.makeText(requireContext(), "La fecha de fin de prueba no puede ser anterior al día actual.", Toast.LENGTH_LONG).show()
+                    return
+                }
+            } catch (_: Exception) {}
         }
 
         val req = CreateSubscriptionRequest(

@@ -147,11 +147,11 @@ export const CancellationGuidesModal: React.FC<CancellationGuidesModalProps> = (
                   </h5>
                   <div className="space-y-3">
                     {steps.map((st, i) => (
-                      <div key={i} className="flex items-start space-x-3 bg-slate-100/80 dark:bg-slate-800/90 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-xs">
+                      <div key={i} className="flex items-start space-x-3 bg-slate-100 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs">
                         <div className="w-6 h-6 rounded-full bg-indigo-600 text-white text-xs font-black flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                           {st.step}
                         </div>
-                        <p className="text-xs text-slate-800 dark:text-slate-100 font-semibold leading-relaxed pt-0.5">
+                        <p className="text-xs text-slate-900 dark:text-slate-100 font-semibold leading-relaxed pt-0.5">
                           {st.instruction}
                         </p>
                       </div>

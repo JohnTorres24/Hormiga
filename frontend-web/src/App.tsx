@@ -35,6 +35,8 @@ import { SubscriptionModal } from './components/SubscriptionModal';
 import { UsdImpactModal } from './components/UsdImpactModal';
 import { ProfileModal } from './components/ProfileModal';
 import { AuthModal } from './components/AuthModal';
+import { LandingPage } from './components/LandingPage';
+import { LoginView } from './components/LoginView';
 import { Bell, ShieldCheck, RefreshCw } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -48,8 +50,8 @@ export const App: React.FC = () => {
   const [activeCurrency, setActiveCurrency] = useState<string>('COP');
   const [loading, setLoading] = useState(true);
 
-  // Usuario y Sesión
-  const [user, setUser] = useState<UserSession>(getCurrentUser());
+  // Usuario y Sesión: Ninguna sesión abierta por defecto
+  const [user, setUser] = useState<UserSession | null>(getCurrentUser());
 
   // Modo Oscuro / Claro
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
@@ -57,6 +59,41 @@ export const App: React.FC = () => {
     if (saved) return saved === 'dark';
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
+
+  // Vista actual: Portada ('landing'), Inicio de sesión ('login') o Panel de control ('app')
+  const [currentView, setCurrentView] = useState<'landing' | 'login' | 'app'>(() => {
+    if (window.location.hash === '#landing') return 'landing';
+    return 'login';
+  });
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      if (window.location.hash === '#app') {
+        setCurrentView('app');
+      } else if (window.location.hash === '#landing') {
+        setCurrentView('landing');
+      } else if (window.location.hash === '#login') {
+        setCurrentView('login');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleEnterApp = () => {
+    if (user) {
+      setCurrentView('app');
+      window.location.hash = '#app';
+    } else {
+      setCurrentView('login');
+      window.location.hash = '#login';
+    }
+  };
+
+  const handleGoToLanding = () => {
+    setCurrentView('landing');
+    window.location.hash = '#landing';
+  };
 
   // Modales
   const [isNewModalOpen, setIsNewModalOpen] = useState(false);
@@ -83,7 +120,9 @@ export const App: React.FC = () => {
   };
 
   useEffect(() => {
-    loadAllData(activeCurrency);
+    if (user) {
+      loadAllData(activeCurrency);
+    }
   }, [user]);
 
   const loadAllData = async (curr?: string) => {
@@ -177,15 +216,40 @@ export const App: React.FC = () => {
 
   const handleLogout = () => {
     logoutUser();
+    setUser(null);
     setIsProfileModalOpen(false);
-    setIsAuthModalOpen(true);
+    setCurrentView('login');
+    window.location.hash = '#login';
   };
 
   const handleAuthSuccess = (loggedUser: UserSession) => {
     setUser(loggedUser);
     setCurrentUser(loggedUser);
     setIsAuthModalOpen(false);
+    setCurrentView('app');
+    window.location.hash = '#app';
   };
+
+  if (currentView === 'landing') {
+    return (
+      <LandingPage
+        onEnterApp={handleEnterApp}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleThemeToggle}
+      />
+    );
+  }
+
+  if (!user || currentView === 'login') {
+    return (
+      <LoginView
+        onSuccess={handleAuthSuccess}
+        isDarkMode={isDarkMode}
+        onToggleTheme={handleThemeToggle}
+        onGoToLanding={handleGoToLanding}
+      />
+    );
+  }
 
   const pendingAlerts = alerts.filter(a => a.status === 'pending');
 
@@ -210,6 +274,8 @@ export const App: React.FC = () => {
         onOpenAlertsTab={() => setActiveTab('alerts')}
         activeTab={activeTab}
         setActiveTab={tab => setActiveTab(tab as any)}
+        onGoToLanding={handleGoToLanding}
+        onLogout={handleLogout}
       />
 
       {/* Contenido Dinámico */}

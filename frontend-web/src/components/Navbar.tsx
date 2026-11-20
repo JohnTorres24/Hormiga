@@ -1,5 +1,5 @@
 import React from 'react';
-import { DollarSign, Bell, Plus, BookOpen, Sun, Moon } from 'lucide-react';
+import { DollarSign, Bell, Plus, BookOpen, Sun, Moon, LogOut } from 'lucide-react';
 import { AntLogo } from './AntLogo';
 import { UserSession } from '../types';
 
@@ -18,6 +18,8 @@ interface NavbarProps {
   onOpenAlertsTab: () => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  onGoToLanding?: () => void;
+  onLogout?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -34,7 +36,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenGuidesModal,
   onOpenAlertsTab,
   activeTab,
-  setActiveTab
+  setActiveTab,
+  onGoToLanding,
+  onLogout
 }) => {
   const initials = user.fullName
     .split(' ')
@@ -148,6 +152,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {user.fullName.split(' ')[0]}
               </span>
             </button>
+
+            {/* Botón Cerrar Sesión Directo */}
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                title="Cerrar Sesión Activa"
+                className="hidden md:flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold text-rose-600 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span className="hidden lg:inline">Salir</span>
+              </button>
+            )}
+
+            {/* Botón Volver a la Portada / Presentación */}
+            {onGoToLanding && (
+              <button
+                onClick={onGoToLanding}
+                title="Volver a la Portada de Presentación"
+                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition"
+              >
+                <span>🏠 Portada</span>
+              </button>
+            )}
 
             {/* Botón de nueva suscripción */}
             <button
