@@ -2,11 +2,14 @@
 ### *Gestor Inteligente de Suscripciones, Detección de Fugas de Capital y Optimización Financiera Personal*
 
 <p align="center">
-  <a href="https://github.com/JohnTorres24/Hormiga/raw/main/release/cazador-gastos-hormiga-v1.0.apk">
-    <img src="https://img.shields.io/badge/Descargar%20APK-Android%20v1.0.0-success?style=for-the-badge&logo=android&logoColor=white" alt="Descargar APK Android" />
+  <a href="https://johntorres24.github.io/Hormiga/#landing">
+    <img src="https://img.shields.io/badge/🌟%20Portada%20de%20Presentación-Abrir%20Landing%20Page-6366F1?style=for-the-badge&logo=safari&logoColor=white" alt="Portada de Presentación Oficial" />
   </a>
-  <a href="https://johntorres24.github.io/Hormiga/">
-    <img src="https://img.shields.io/badge/Web%20App%20en%20Vivo-GitHub%20Pages-6366F1?style=for-the-badge&logo=react&logoColor=white" alt="Web App en Vivo" />
+  <a href="https://johntorres24.github.io/Hormiga/#login">
+    <img src="https://img.shields.io/badge/🚀%20Web%20App-Iniciar%20Sesión-4F46E5?style=for-the-badge&logo=react&logoColor=white" alt="Web App Iniciar Sesión" />
+  </a>
+  <a href="https://github.com/JohnTorres24/Hormiga/raw/main/release/cazador-gastos-hormiga-v1.0.apk">
+    <img src="https://img.shields.io/badge/📥%20Descargar%20APK-Android%20v1.0.0-success?style=for-the-badge&logo=android&logoColor=white" alt="Descargar APK Android" />
   </a>
   <a href="https://cazador-gastos-hormiga-api.onrender.com/api/health">
     <img src="https://img.shields.io/badge/API%20Backend-Render%20Online-06B6D4?style=for-the-badge&logo=spring&logoColor=white" alt="API Backend" />
@@ -57,9 +60,13 @@ Puede descargar directamente el archivo binario compilado listo para instalar en
 3. Abra la aplicación y disfrute de la experiencia completa con sincronización en la nube.
 
 ### 🌐 Para Navegadores Web (Plataforma en la Nube)
-Acceda a la aplicación web interactiva sin necesidad de instalación:
-- **Enlace de Producción en GitHub Pages:** [https://johntorres24.github.io/Hormiga/](https://johntorres24.github.io/Hormiga/)
-- **Servicio en Render:** [https://cazador-gastos-hormiga-web.onrender.com](https://cazador-gastos-hormiga-web.onrender.com)
+Acceda a la aplicación web interactiva directamente desde cualquier navegador moderno:
+- **🌟 Portada de Presentación Oficial (Landing Page):** [https://johntorres24.github.io/Hormiga/#landing](https://johntorres24.github.io/Hormiga/#landing)  
+  *Página de presentación interactiva que explica la filosofía del sistema, la erradicación de gastos hormiga y ofrece el botón de descarga del instalador APK para Android.*
+- **🔐 Plataforma Web / Inicio de Sesión:** [https://johntorres24.github.io/Hormiga/#login](https://johntorres24.github.io/Hormiga/#login)  
+  *Acceso formal al sistema con autenticación obligatoria y sin sesiones abiertas por defecto. Permite iniciar sesión o crear una nueva cuenta.*
+- **📊 Panel Financiero Principal (Dashboard):** [https://johntorres24.github.io/Hormiga/#app](https://johntorres24.github.io/Hormiga/#app) *(disponible tras autenticarse)*.
+- **Servidor Alternativo en Render:** [https://cazador-gastos-hormiga-web.onrender.com](https://cazador-gastos-hormiga-web.onrender.com)
 - **API Backend REST:** [https://cazador-gastos-hormiga-api.onrender.com/api](https://cazador-gastos-hormiga-api.onrender.com/api)
 
 ---
@@ -102,9 +109,9 @@ Diseñado minuciosamente con paletas de alto contraste sobre degradados índigo/
 | :---: | :---: | :---: |
 | <img src="docs/screenshots/mobile_dashboard_dark.png" width="260" alt="Dashboard Móvil" /> | <img src="docs/screenshots/mobile_profile_savings.png" width="260" alt="Perfil Móvil" /> | <img src="docs/screenshots/web_cancellation_guides.png" width="380" alt="Guías de Cancelación Web" /> |
 
-| Formulario de Nueva Suscripción | Plataforma Web en Vivo (Escritorio) |
-| :---: | :---: |
-| <img src="docs/screenshots/mobile_add_subscription.png" width="260" alt="Formulario Suscripción" /> | <img src="docs/screenshots/web_dashboard_dark.png" width="460" alt="Dashboard Web" /> |
+| Formulario de Nueva Suscripción | Plataforma Web en Vivo (Escritorio) | Inicio de Sesión Web (Sin Atajos) |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/mobile_add_subscription.png" width="260" alt="Formulario Suscripción" /> | <img src="docs/screenshots/web_dashboard_dark.png" width="460" alt="Dashboard Web" /> | <img src="docs/screenshots/web_login_clean.png" width="360" alt="Inicio de Sesión Web" /> |
 
 ---
 
@@ -160,6 +167,7 @@ Diseñado minuciosamente con paletas de alto contraste sobre degradados índigo/
 │   ├── app/src/main/java/           # Arquitectura MVVM, actividades, adaptadores y fragments
 │   ├── app/src/main/res/            # Layouts XML, esquemas de color día/noche y vectores
 │   └── build.gradle.kts             # Configuración de compilación Android
+├── presentacion/                    # Material comercial, pitch deck (PPTX), guion (DOCX) y especificaciones
 ├── release/                         # Paquete binario compilado listo para distribución
 │   └── cazador-gastos-hormiga-v1.0.apk
 ├── supabase/                        # Scripts SQL de esquema, funciones y datos semilla
